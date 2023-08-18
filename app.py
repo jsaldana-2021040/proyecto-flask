@@ -11,10 +11,28 @@ data = [
     {'nombres': 'Elisa María', 'apellidos': 'Jauregui', 'tieneVisa': True},
     {'nombres': 'Ana Beatruiz', 'apellidos': 'Obiols', 'tieneVisa': True},
     {'nombres': 'Jonathan', 'apellidos': 'Monroy', 'tieneVisa': False},
-    {'nombres': 'Juan Luis', 'apellidos': 'García Novales', 'tieneVisa': True},
+    {'nombres': 'Andres Eduardo', 'apellidos': 'Garcia Salazar', 'tieneVisa': True},
+    {'nombres': 'Miguel Fernando', 'apellidos': 'Mendez MOnterroso', 'tieneVisa': True},
+    {'nombres': 'Jose Miguel', 'apellidos': 'Martinez Hernandez', 'tieneVisa': False},
+    {'nombres': 'Diego Rene', 'apellidos': 'Arriola Ruiz', 'tieneVisa': False},
+    {'nombres': 'Pablo Andrez', 'apellidos': 'Mendez Sanchez', 'tieneVisa': True},
+    {'nombres': 'Adriana Cristina', 'apellidos': 'Elizabeth Dias', 'tieneVisa': False},
+    {'nombres': 'Luis Fernando', 'apellidos': 'Mendoza Alvarado', 'tieneVisa': True},
+    {'nombres': 'Luis Francisco', 'apellidos': 'Perez Dias', 'tieneVisa': True},
+    {'nombres': 'Diego Josue', 'apellidos': 'Monzon Armando', 'tieneVisa': False},
+    {'nombres': 'Mario Roberto', 'apellidos': 'Martinez Sandobal', 'tieneVisa': True},
+    {'nombres': 'Daniel Esteban', 'apellidos': 'Sanchez Martinez', 'tieneVisa': True},
+    {'nombres': 'Jose Tulio', 'apellidos': 'Jimenez Matul', 'tieneVisa': True},
+
+    {'nombres': 'Diego Josue', 'apellidos': 'Monzon Armando', 'tieneVisa': False},
+    {'nombres': 'Mario Roberto', 'apellidos': 'Martinez Sandobal', 'tieneVisa': True},
+    {'nombres': 'Daniel Esteban', 'apellidos': 'Sanchez Martinez', 'tieneVisa': True},
+    {'nombres': 'Jose Tulio', 'apellidos': 'Jimenez Matul', 'tieneVisa': True},
 ]
 
-listPersonas = [Persona(i+1, dtPersona['nombres'], dtPersona['apellidos'], dtPersona['tieneVisa']) for i, dtPersona in enumerate(data)]
+listPersonas = [Persona(i+1, dtPersona['nombres'], dtPersona['apellidos'],
+                        dtPersona['tieneVisa']) for i, dtPersona in enumerate(data)]
+
 
 def find(id: int):
     output: Persona = None
@@ -22,6 +40,7 @@ def find(id: int):
         if persona.codigo == id:
             output = persona
     return output
+
 
 app = Flask(__name__)
 api = Api(app)
@@ -36,7 +55,7 @@ personaModel = api.model('PersonaModel', {
 
 @api.route('/personas')
 class PersonasResource(Resource):
-    
+
     parser = reqparse.RequestParser()
     parser.add_argument('tieneVisa', type=inputs.boolean)
 
@@ -47,9 +66,9 @@ class PersonasResource(Resource):
             return [persona for persona in listPersonas if persona.tieneVisa == args['tieneVisa']]
         else:
             return listPersonas
-    
+
     def post(self):
-        return {'post' : 'world'}
+        return {'post': 'world'}
 
 
 @api.route('/personas/<int:id>')
@@ -58,7 +77,7 @@ class PersonaResource(Resource):
     @api.marshal_with(personaModel)
     def get(self, id):
         return find(id)
-    
+
     def put(self, id):
         persona = find(id)
         return persona
@@ -66,8 +85,23 @@ class PersonaResource(Resource):
 
 @api.route('/personas/pg')
 class PersonaPgResource(Resource):
+
+    parser = reqparse.RequestParser()
+    parser.add_argument('pagina', type=int)
+    parser.add_argument('porPagina', type=int)
+
+    @api.marshal_list_with(personaModel)
     def get(self):
-        return {'get':'get de pag'}
+        args = self.parser.parse_args()
+        output = []
+        controlador = 0
+        pagina: int = args['pagina']
+        customPag: int = args['porPagina']
+        for persona in listPersonas:
+            if controlador in range((customPag * pagina) - customPag, customPag*pagina):
+                output.append(persona)
+            controlador+=1
+        return output
 
 
 if __name__ == '__main__':
