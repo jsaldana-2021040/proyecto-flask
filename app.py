@@ -5,29 +5,29 @@ from persona import Persona
 data = [
     {'nombres': 'Pedro Andrés', 'apellidos': 'Vega Stalling', 'tieneVisa': False},
     {'nombres': 'José Roberto', 'apellidos': 'Saldaña Arrazola', 'tieneVisa': True},
-    {'nombres': 'Selvin Fernando', 'apellidos': 'Ac Cucul', 'tieneVisa': False},
-    {'nombres': 'Erick Daniel', 'apellidos': 'Poron Muñoz', 'tieneVisa': True},
-    {'nombres': 'Erick Fernando', 'apellidos': 'Canto Boton', 'tieneVisa': False},
-    {'nombres': 'Elisa María', 'apellidos': 'Jauregui', 'tieneVisa': True},
-    {'nombres': 'Ana Beatruiz', 'apellidos': 'Obiols', 'tieneVisa': True},
-    {'nombres': 'Jonathan', 'apellidos': 'Monroy', 'tieneVisa': False},
-    {'nombres': 'Andres Eduardo', 'apellidos': 'Garcia Salazar', 'tieneVisa': True},
-    {'nombres': 'Miguel Fernando', 'apellidos': 'Mendez MOnterroso', 'tieneVisa': True},
-    {'nombres': 'Jose Miguel', 'apellidos': 'Martinez Hernandez', 'tieneVisa': False},
-    {'nombres': 'Diego Rene', 'apellidos': 'Arriola Ruiz', 'tieneVisa': False},
-    {'nombres': 'Pablo Andrez', 'apellidos': 'Mendez Sanchez', 'tieneVisa': True},
-    {'nombres': 'Adriana Cristina', 'apellidos': 'Elizabeth Dias', 'tieneVisa': False},
-    {'nombres': 'Luis Fernando', 'apellidos': 'Mendoza Alvarado', 'tieneVisa': True},
-    {'nombres': 'Luis Francisco', 'apellidos': 'Perez Dias', 'tieneVisa': True},
-    {'nombres': 'Diego Josue', 'apellidos': 'Monzon Armando', 'tieneVisa': False},
-    {'nombres': 'Mario Roberto', 'apellidos': 'Martinez Sandobal', 'tieneVisa': True},
-    {'nombres': 'Daniel Esteban', 'apellidos': 'Sanchez Martinez', 'tieneVisa': True},
-    {'nombres': 'Jose Tulio', 'apellidos': 'Jimenez Matul', 'tieneVisa': True},
+    # {'nombres': 'Selvin Fernando', 'apellidos': 'Ac Cucul', 'tieneVisa': False},
+    # {'nombres': 'Erick Daniel', 'apellidos': 'Poron Muñoz', 'tieneVisa': True},
+    # {'nombres': 'Erick Fernando', 'apellidos': 'Canto Boton', 'tieneVisa': False},
+    # {'nombres': 'Elisa María', 'apellidos': 'Jauregui', 'tieneVisa': True},
+    # {'nombres': 'Ana Beatruiz', 'apellidos': 'Obiols', 'tieneVisa': True},
+    # {'nombres': 'Jonathan', 'apellidos': 'Monroy', 'tieneVisa': False},
+    # {'nombres': 'Andres Eduardo', 'apellidos': 'Garcia Salazar', 'tieneVisa': True},
+    # {'nombres': 'Miguel Fernando', 'apellidos': 'Mendez MOnterroso', 'tieneVisa': True},
+    # {'nombres': 'Jose Miguel', 'apellidos': 'Martinez Hernandez', 'tieneVisa': False},
+    # {'nombres': 'Diego Rene', 'apellidos': 'Arriola Ruiz', 'tieneVisa': False},
+    # {'nombres': 'Pablo Andrez', 'apellidos': 'Mendez Sanchez', 'tieneVisa': True},
+    # {'nombres': 'Adriana Cristina', 'apellidos': 'Elizabeth Dias', 'tieneVisa': False},
+    # {'nombres': 'Luis Fernando', 'apellidos': 'Mendoza Alvarado', 'tieneVisa': True},
+    # {'nombres': 'Luis Francisco', 'apellidos': 'Perez Dias', 'tieneVisa': True},
+    # {'nombres': 'Diego Josue', 'apellidos': 'Monzon Armando', 'tieneVisa': False},
+    # {'nombres': 'Mario Roberto', 'apellidos': 'Martinez Sandobal', 'tieneVisa': True},
+    # {'nombres': 'Daniel Esteban', 'apellidos': 'Sanchez Martinez', 'tieneVisa': True},
+    # {'nombres': 'Jose Tulio', 'apellidos': 'Jimenez Matul', 'tieneVisa': True},
 
-    {'nombres': 'Diego Josue', 'apellidos': 'Monzon Armando', 'tieneVisa': False},
-    {'nombres': 'Mario Roberto', 'apellidos': 'Martinez Sandobal', 'tieneVisa': True},
-    {'nombres': 'Daniel Esteban', 'apellidos': 'Sanchez Martinez', 'tieneVisa': True},
-    {'nombres': 'Jose Tulio', 'apellidos': 'Jimenez Matul', 'tieneVisa': True},
+    # {'nombres': 'Diego Josue', 'apellidos': 'Monzon Armando', 'tieneVisa': False},
+    # {'nombres': 'Mario Roberto', 'apellidos': 'Martinez Sandobal', 'tieneVisa': True},
+    # {'nombres': 'Daniel Esteban', 'apellidos': 'Sanchez Martinez', 'tieneVisa': True},
+    # {'nombres': 'Jose Tulio', 'apellidos': 'Jimenez Matul', 'tieneVisa': True},
 ]
 
 listPersonas = [Persona(i+1, dtPersona['nombres'], dtPersona['apellidos'],
@@ -62,8 +62,11 @@ class PersonasResource(Resource):
         else:
             return listPersonas
 
+    @api.marshal_with(personaModel)
     def post(self):
-        return {'post': 'world'}
+        nuevaPersona = Persona(len(listPersonas) + 1, 'Prueba', 'Prueba', False)
+        listPersonas.append(nuevaPersona)
+        return nuevaPersona
 
 
 @api.route('/personas/<int:id>')
@@ -82,22 +85,14 @@ class PersonaResource(Resource):
 class PersonaPgResource(Resource):
 
     parser = reqparse.RequestParser()
-    parser.add_argument('pagina', type=int)
-    parser.add_argument('porPagina', type=int)
+    parser.add_argument('pagina', default=1, type=int)
+    parser.add_argument('porPagina', default=10, type=int)
 
     @api.marshal_list_with(personaModel)
     def get(self):
         args = self.parser.parse_args()
-        output = []
-        pagina: int = args['pagina'] if args['pagina'] != None else 1
-        customPag: int = args['porPagina'] if args['porPagina'] != None else 10
-        indexFin: int = customPag * pagina
-
-        for controlador, persona in enumerate(listPersonas):
-            if controlador in range(indexFin - customPag, indexFin):
-                output.append(persona)
-                
-        return output
+        indexFinal: int = args['porPagina'] * args['pagina']
+        return listPersonas[indexFinal - args['porPagina']: indexFinal]
 
 
 if __name__ == '__main__':
