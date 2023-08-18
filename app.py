@@ -2,16 +2,19 @@ from flask import Flask
 from flask_restx import Resource, Api, fields, reqparse, inputs
 from persona import Persona
 
-listPersonas = [
-    Persona(1, 'Pedro Andrés', 'Vega Stalling', False),
-    Persona(2, 'José Roberto', 'Saldaña Arrazola', True),
-    Persona(3, 'Selvin Fernando', 'Ac Cucul', False),
-    Persona(4, 'Erick Daniel', 'Poron Muñoz', True),
-    Persona(5, 'Erick Fernando', 'Canto Boton', False),
-    Persona(6, 'Elisa María', 'Jauregui', True),
-    Persona(7, 'Ana Beatruiz', 'Obiols', True),
-    Persona(8, 'Jonathan', 'Monroy', False),
+data = [
+    {'nombres': 'Pedro Andrés', 'apellidos': 'Vega Stalling', 'tieneVisa': False},
+    {'nombres': 'José Roberto', 'apellidos': 'Saldaña Arrazola', 'tieneVisa': True},
+    {'nombres': 'Selvin Fernando', 'apellidos': 'Ac Cucul', 'tieneVisa': False},
+    {'nombres': 'Erick Daniel', 'apellidos': 'Poron Muñoz', 'tieneVisa': True},
+    {'nombres': 'Erick Fernando', 'apellidos': 'Canto Boton', 'tieneVisa': False},
+    {'nombres': 'Elisa María', 'apellidos': 'Jauregui', 'tieneVisa': True},
+    {'nombres': 'Ana Beatruiz', 'apellidos': 'Obiols', 'tieneVisa': True},
+    {'nombres': 'Jonathan', 'apellidos': 'Monroy', 'tieneVisa': False},
+    {'nombres': 'Juan Luis', 'apellidos': 'García Novales', 'tieneVisa': True},
 ]
+
+listPersonas = [Persona(i+1, dtPersona['nombres'], dtPersona['apellidos'], dtPersona['tieneVisa']) for i, dtPersona in enumerate(data)]
 
 def find(id: int):
     output: Persona = None
@@ -36,17 +39,14 @@ class PersonasResource(Resource):
     
     parser = reqparse.RequestParser()
     parser.add_argument('tieneVisa', type=inputs.boolean)
+
     @api.marshal_list_with(personaModel)
     def get(self):
         args = self.parser.parse_args()
-        output=[]
-        if args['tieneVisa']!=None:
-            for i in listPersonas:
-                if i.tieneVisa==args['tieneVisa']:
-                    output.append(i)
+        if args['tieneVisa'] != None:
+            return [persona for persona in listPersonas if persona.tieneVisa == args['tieneVisa']]
         else:
             return listPersonas
-        return output
     
     def post(self):
         return {'post' : 'world'}
