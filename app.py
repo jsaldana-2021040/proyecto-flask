@@ -35,12 +35,7 @@ listPersonas = [Persona(i+1, dtPersona['nombres'], dtPersona['apellidos'],
 
 
 def find(id: int):
-    output: Persona = None
-    for persona in listPersonas:
-        if persona.codigo == id:
-            output = persona
-    return output
-
+    return next((persona for persona in listPersonas if persona.codigo == id), None)
 
 app = Flask(__name__)
 api = Api(app)
@@ -94,13 +89,14 @@ class PersonaPgResource(Resource):
     def get(self):
         args = self.parser.parse_args()
         output = []
-        controlador = 0
-        pagina: int = args['pagina']
-        customPag: int = args['porPagina']
-        for persona in listPersonas:
-            if controlador in range((customPag * pagina) - customPag, customPag * pagina):
+        pagina: int = args['pagina'] if args['pagina'] != None else 1
+        customPag: int = args['porPagina'] if args['porPagina'] != None else 10
+        indexFin: int = customPag * pagina
+
+        for controlador, persona in enumerate(listPersonas):
+            if controlador in range(indexFin - customPag, indexFin):
                 output.append(persona)
-            controlador+=1
+                
         return output
 
 
