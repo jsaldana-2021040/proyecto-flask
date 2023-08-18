@@ -98,7 +98,7 @@ class PersonaPgResource(Resource):
         pagina: int = args['pagina']
         customPag: int = args['porPagina']
         for persona in listPersonas:
-            if controlador in range((customPag * pagina) - customPag, customPag*pagina):
+            if controlador in range((customPag * pagina) - customPag, customPag * pagina):
                 output.append(persona)
             controlador+=1
         return output
