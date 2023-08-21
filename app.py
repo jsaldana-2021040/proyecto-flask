@@ -2,6 +2,7 @@ from flask import Flask
 from flask_restx import Resource, Api, fields, reqparse, inputs
 from persona import Persona
 from paginacion import Paginacion
+from database import db, Personas
 
 data = [
     {'nombres': 'Pedro Andrés', 'apellidos': 'Vega Stalling', 'tieneVisa': True, 'activo': True},
@@ -36,9 +37,12 @@ listPersonas = [Persona(i+1, dtPersona['nombres'], dtPersona['apellidos'],
 def find(id: int):
     return next((persona for persona in listPersonas if persona.codigo == id), None)
 
-
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:d3v-database@10.20.20.6:5432/rlt_dru'
+
+
 api = Api(app)
+db.init_app(app)
 
 personaModel = api.model('PersonaModel', {
     'codigo': fields.Integer,
