@@ -38,7 +38,7 @@ def find(id: int):
     return next((persona for persona in listPersonas if persona.codigo == id), None)
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:d3v-database@10.20.20.6:5432/rlt_dru'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:robertiño123@localhost:5432/db_pruebas'
 
 
 api = Api(app)
