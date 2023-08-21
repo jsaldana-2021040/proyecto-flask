@@ -54,6 +54,7 @@ class PersonasResource(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('tieneVisa', type=inputs.boolean, location='args')
     parser.add_argument('activo', type=inputs.boolean, location='args')
+    parser.add_argument('nombres', type=str, location='args')
 
     @api.marshal_list_with(personaModel)
     def get(self):
@@ -64,6 +65,8 @@ class PersonasResource(Resource):
             output = [persona for persona in output if persona.tieneVisa == args['tieneVisa']]
         if args['activo'] != None:
             output = [persona for persona in output if persona.activo == args['activo']]
+        if args['nombres'] != None:
+            output = [persona for persona in output if args['nombres'].upper() in persona.nombres.upper()]
         return output
 
     @api.marshal_with(personaModel)
