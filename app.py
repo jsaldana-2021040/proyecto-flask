@@ -48,6 +48,14 @@ personaModel = api.model('PersonaModel', {
     'activo': fields.Boolean
 })
 
+PaginacionModel = api.model('PaginacionModel', {
+    'totalElementos': fields.Integer,
+    'elementos': fields.List(fields.Nested(personaModel)),
+    'paginaActual': fields.Integer,
+    'elementosPorPagina': fields.Integer,
+    'totalPaginas': fields.Integer
+})
+
 
 @api.route('/personas')
 class PersonasResource(Resource):
@@ -56,6 +64,7 @@ class PersonasResource(Resource):
     parser.add_argument('tieneVisa', type=inputs.boolean, location='args')
     parser.add_argument('activo', type=inputs.boolean, location='args')
     parser.add_argument('nombres', type=str, location='args')
+    parser.add_argument('apellidos', type=str, location='args')
 
     @api.marshal_list_with(personaModel)
     def get(self):
@@ -113,12 +122,27 @@ class PersonaPgResource(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('pagina', default=1, type=int)
     parser.add_argument('porPagina', default=10, type=int)
+    parser.add_argument('tieneVisa', type=inputs.boolean, location='args')
+    parser.add_argument('activo', type=inputs.boolean, location='args')
+    parser.add_argument('nombres', type=str, location='args')
+    parser.add_argument('apellidos', type=str, location='args')
 
-    @api.marshal_list_with(personaModel)
+    @api.marshal_list_with(PaginacionModel)
     def get(self):
         args = self.parser.parse_args()
+        output: list[Persona] = listPersonas
+        
+        if args['tieneVisa'] != None:
+            output = [persona for persona in output if persona.tieneVisa == args['tieneVisa']]
+        if args['activo'] != None:
+            output = [persona for persona in output if persona.activo == args['activo']]
+        if args['nombres'] != None:
+            output = [persona for persona in output if args['nombres'].upper() in persona.nombres.upper()]
+        if args['apellidos'] != None:
+            output = [persona for persona in output if args['apellidos'].upper() in persona.apellidos.upper()]
+
         indexFinal: int = args['porPagina'] * args['pagina']
-        return Paginacion(len(listPersonas), listPersonas[indexFinal - args['porPagina']: indexFinal], args['pagina'], args['porPagina'])
+        return Paginacion(len(output), output[indexFinal - args['porPagina']: indexFinal], args['pagina'], args['porPagina'])
         # return listPersonas[indexFinal - args['porPagina']: indexFinal]
 
 
