@@ -3,32 +3,29 @@ from flask_restx import Resource, Api, fields, reqparse, inputs
 from persona import Persona
 
 data = [
-    {'nombres': 'Pedro Andrés', 'apellidos': 'Vega Stalling',
-        'tieneVisa': True, 'activo': True},
-    {'nombres': 'José Roberto', 'apellidos': 'Saldaña Arrazola',
-        'tieneVisa': True, 'activo': False},
-    # {'nombres': 'Selvin Fernando', 'apellidos': 'Ac Cucul', 'tieneVisa': False, 'activo': True},
-    # {'nombres': 'Erick Daniel', 'apellidos': 'Poron Muñoz', 'tieneVisa': True, 'activo': True},
-    # {'nombres': 'Erick Fernando', 'apellidos': 'Canto Boton', 'tieneVisa': False, 'activo': True},
-    # {'nombres': 'Elisa María', 'apellidos': 'Jauregui', 'tieneVisa': True, 'activo': False},
-    # {'nombres': 'Ana Beatruiz', 'apellidos': 'Obiols', 'tieneVisa': True, 'activo': True},
-    # {'nombres': 'Jonathan', 'apellidos': 'Monroy', 'tieneVisa': False, 'activo': True},
-    # {'nombres': 'Andres Eduardo', 'apellidos': 'Garcia Salazar', 'tieneVisa': True, 'activo': True},
-    # {'nombres': 'Miguel Fernando', 'apellidos': 'Mendez MOnterroso', 'tieneVisa': True, 'activo': True},
-    # {'nombres': 'Jose Miguel', 'apellidos': 'Martinez Hernandez', 'tieneVisa': False, 'activo': False},
-    # {'nombres': 'Diego Rene', 'apellidos': 'Arriola Ruiz', 'tieneVisa': False, 'activo': True},
-    # {'nombres': 'Pablo Andrez', 'apellidos': 'Mendez Sanchez', 'tieneVisa': True, 'activo': True},
-    # {'nombres': 'Adriana Cristina', 'apellidos': 'Elizabeth Dias', 'tieneVisa': False, 'activo': True},
-    # {'nombres': 'Luis Fernando', 'apellidos': 'Mendoza Alvarado', 'tieneVisa': True, 'activo': False},
-    # {'nombres': 'Luis Francisco', 'apellidos': 'Perez Dias', 'tieneVisa': True, 'activo': True},
-    # {'nombres': 'Diego Josue', 'apellidos': 'Monzon Armando', 'tieneVisa': False, 'activo': True},
-    # {'nombres': 'Mario Roberto', 'apellidos': 'Martinez Sandobal', 'tieneVisa': True, 'activo': False},
-    # {'nombres': 'Daniel Esteban', 'apellidos': 'Sanchez Martinez', 'tieneVisa': True, 'activo': True},
-    # {'nombres': 'Jose Tulio', 'apellidos': 'Jimenez Matul', 'tieneVisa': True, 'activo': True},
-    # {'nombres': 'Diego Josue', 'apellidos': 'Monzon Armando', 'tieneVisa': False, 'activo': True},
-    # {'nombres': 'Mario Roberto', 'apellidos': 'Martinez Sandobal', 'tieneVisa': True, 'activo': False},
-    # {'nombres': 'Daniel Esteban', 'apellidos': 'Sanchez Martinez', 'tieneVisa': True, 'activo': True},
-    # {'nombres': 'Jose Tulio', 'apellidos': 'Jimenez Matul', 'tieneVisa': True},
+    {'nombres': 'Pedro Andrés', 'apellidos': 'Vega Stalling', 'tieneVisa': True, 'activo': True},
+    {'nombres': 'José Roberto', 'apellidos': 'Saldaña Arrazola', 'tieneVisa': True, 'activo': False},
+    {'nombres': 'Selvin Fernando', 'apellidos': 'Ac Cucul', 'tieneVisa': False, 'activo': True},
+    {'nombres': 'Erick Daniel', 'apellidos': 'Poron Muñoz', 'tieneVisa': True, 'activo': True},
+    {'nombres': 'Erick Fernando', 'apellidos': 'Canto Boton', 'tieneVisa': False, 'activo': False},
+    {'nombres': 'Elisa María', 'apellidos': 'Jauregui', 'tieneVisa': True, 'activo': False},
+    {'nombres': 'Ana Beatruiz', 'apellidos': 'Obiols', 'tieneVisa': True, 'activo': True},
+    {'nombres': 'Jonathan', 'apellidos': 'Monroy', 'tieneVisa': False, 'activo': True},
+    {'nombres': 'Andres Eduardo', 'apellidos': 'Garcia Salazar', 'tieneVisa': True, 'activo': True},
+    {'nombres': 'Miguel Fernando', 'apellidos': 'Mendez MOnterroso', 'tieneVisa': True, 'activo': True},
+    {'nombres': 'Jose Miguel', 'apellidos': 'Martinez Hernandez', 'tieneVisa': False, 'activo': False},
+    {'nombres': 'Diego Rene', 'apellidos': 'Arriola Ruiz', 'tieneVisa': False, 'activo': True},
+    {'nombres': 'Pablo Andrez', 'apellidos': 'Mendez Sanchez', 'tieneVisa': True, 'activo': True},
+    {'nombres': 'Adriana Cristina', 'apellidos': 'Elizabeth Dias', 'tieneVisa': False, 'activo': True},
+    {'nombres': 'Luis Fernando', 'apellidos': 'Mendoza Alvarado', 'tieneVisa': True, 'activo': False},
+    {'nombres': 'Luis Francisco', 'apellidos': 'Perez Dias', 'tieneVisa': True, 'activo': True},
+    {'nombres': 'Diego Josue', 'apellidos': 'Monzon Armando', 'tieneVisa': False, 'activo': True},
+    {'nombres': 'Mario Roberto', 'apellidos': 'Martinez Sandobal', 'tieneVisa': True, 'activo': False},
+    {'nombres': 'Daniel Esteban', 'apellidos': 'Sanchez Martinez', 'tieneVisa': True, 'activo': True},
+    {'nombres': 'Jose Tulio', 'apellidos': 'Jimenez Matul', 'tieneVisa': True, 'activo': True},
+    {'nombres': 'Diego Josue', 'apellidos': 'Monzon Armando', 'tieneVisa': False, 'activo': True},
+    {'nombres': 'Mario Roberto', 'apellidos': 'Martinez Sandobal', 'tieneVisa': True, 'activo': False},
+    {'nombres': 'Daniel Esteban', 'apellidos': 'Sanchez Martinez', 'tieneVisa': True, 'activo': True},
 ]
 
 listPersonas = [Persona(i+1, dtPersona['nombres'], dtPersona['apellidos'],
@@ -61,18 +58,18 @@ class PersonasResource(Resource):
     @api.marshal_list_with(personaModel)
     def get(self):
         args = self.parser.parse_args()
-        if args['tieneVisa'] != None or args['activo'] == True:
-            return [persona for persona in listPersonas if persona.tieneVisa == args['tieneVisa'] and persona.activo == args['activo']]
-        elif args['activo'] == False:
-            return [persona for persona in listPersonas if persona.activo == False]
-        else:
-            return listPersonas
+        output: list[Persona] = listPersonas
+
+        if args['tieneVisa'] != None:
+            output = [persona for persona in output if persona.tieneVisa == args['tieneVisa']]
+        if args['activo'] != None:
+            output = [persona for persona in output if persona.activo == args['activo']]
+        return output
 
     @api.marshal_with(personaModel)
     def post(self):
         data = api.payload
-        nuevaPersona = Persona(
-            len(listPersonas) + 1, data['nombres'], data['apellidos'], data['tieneVisa'], activo=True)
+        nuevaPersona = Persona(len(listPersonas) + 1, data['nombres'], data['apellidos'], data['tieneVisa'], activo=True)
         listPersonas.append(nuevaPersona)
         return nuevaPersona
 
