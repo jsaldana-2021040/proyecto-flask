@@ -67,6 +67,8 @@ class PersonasResource(Resource):
             output = [persona for persona in output if persona.activo == args['activo']]
         if args['nombres'] != None:
             output = [persona for persona in output if args['nombres'].upper() in persona.nombres.upper()]
+        if args['apellidos'] != None:
+            output = [persona for persona in output if args['apellidos'].upper() in persona.apellidos.upper()]
         return output
 
     @api.marshal_with(personaModel)
