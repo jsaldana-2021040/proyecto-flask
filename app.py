@@ -3,39 +3,41 @@ from flask_restx import Resource, Api, fields, reqparse, inputs
 from persona import Persona
 
 data = [
-    {'nombres': 'Pedro Andrés', 'apellidos': 'Vega Stalling', 'tieneVisa': False},
-    {'nombres': 'José Roberto', 'apellidos': 'Saldaña Arrazola', 'tieneVisa': True},
-    # {'nombres': 'Selvin Fernando', 'apellidos': 'Ac Cucul', 'tieneVisa': False},
-    # {'nombres': 'Erick Daniel', 'apellidos': 'Poron Muñoz', 'tieneVisa': True},
-    # {'nombres': 'Erick Fernando', 'apellidos': 'Canto Boton', 'tieneVisa': False},
-    # {'nombres': 'Elisa María', 'apellidos': 'Jauregui', 'tieneVisa': True},
-    # {'nombres': 'Ana Beatruiz', 'apellidos': 'Obiols', 'tieneVisa': True},
-    # {'nombres': 'Jonathan', 'apellidos': 'Monroy', 'tieneVisa': False},
-    # {'nombres': 'Andres Eduardo', 'apellidos': 'Garcia Salazar', 'tieneVisa': True},
-    # {'nombres': 'Miguel Fernando', 'apellidos': 'Mendez MOnterroso', 'tieneVisa': True},
-    # {'nombres': 'Jose Miguel', 'apellidos': 'Martinez Hernandez', 'tieneVisa': False},
-    # {'nombres': 'Diego Rene', 'apellidos': 'Arriola Ruiz', 'tieneVisa': False},
-    # {'nombres': 'Pablo Andrez', 'apellidos': 'Mendez Sanchez', 'tieneVisa': True},
-    # {'nombres': 'Adriana Cristina', 'apellidos': 'Elizabeth Dias', 'tieneVisa': False},
-    # {'nombres': 'Luis Fernando', 'apellidos': 'Mendoza Alvarado', 'tieneVisa': True},
-    # {'nombres': 'Luis Francisco', 'apellidos': 'Perez Dias', 'tieneVisa': True},
-    # {'nombres': 'Diego Josue', 'apellidos': 'Monzon Armando', 'tieneVisa': False},
-    # {'nombres': 'Mario Roberto', 'apellidos': 'Martinez Sandobal', 'tieneVisa': True},
-    # {'nombres': 'Daniel Esteban', 'apellidos': 'Sanchez Martinez', 'tieneVisa': True},
-    # {'nombres': 'Jose Tulio', 'apellidos': 'Jimenez Matul', 'tieneVisa': True},
-
-    # {'nombres': 'Diego Josue', 'apellidos': 'Monzon Armando', 'tieneVisa': False},
-    # {'nombres': 'Mario Roberto', 'apellidos': 'Martinez Sandobal', 'tieneVisa': True},
-    # {'nombres': 'Daniel Esteban', 'apellidos': 'Sanchez Martinez', 'tieneVisa': True},
+    {'nombres': 'Pedro Andrés', 'apellidos': 'Vega Stalling',
+        'tieneVisa': True, 'activo': True},
+    {'nombres': 'José Roberto', 'apellidos': 'Saldaña Arrazola',
+        'tieneVisa': True, 'activo': False},
+    # {'nombres': 'Selvin Fernando', 'apellidos': 'Ac Cucul', 'tieneVisa': False, 'activo': True},
+    # {'nombres': 'Erick Daniel', 'apellidos': 'Poron Muñoz', 'tieneVisa': True, 'activo': True},
+    # {'nombres': 'Erick Fernando', 'apellidos': 'Canto Boton', 'tieneVisa': False, 'activo': True},
+    # {'nombres': 'Elisa María', 'apellidos': 'Jauregui', 'tieneVisa': True, 'activo': False},
+    # {'nombres': 'Ana Beatruiz', 'apellidos': 'Obiols', 'tieneVisa': True, 'activo': True},
+    # {'nombres': 'Jonathan', 'apellidos': 'Monroy', 'tieneVisa': False, 'activo': True},
+    # {'nombres': 'Andres Eduardo', 'apellidos': 'Garcia Salazar', 'tieneVisa': True, 'activo': True},
+    # {'nombres': 'Miguel Fernando', 'apellidos': 'Mendez MOnterroso', 'tieneVisa': True, 'activo': True},
+    # {'nombres': 'Jose Miguel', 'apellidos': 'Martinez Hernandez', 'tieneVisa': False, 'activo': False},
+    # {'nombres': 'Diego Rene', 'apellidos': 'Arriola Ruiz', 'tieneVisa': False, 'activo': True},
+    # {'nombres': 'Pablo Andrez', 'apellidos': 'Mendez Sanchez', 'tieneVisa': True, 'activo': True},
+    # {'nombres': 'Adriana Cristina', 'apellidos': 'Elizabeth Dias', 'tieneVisa': False, 'activo': True},
+    # {'nombres': 'Luis Fernando', 'apellidos': 'Mendoza Alvarado', 'tieneVisa': True, 'activo': False},
+    # {'nombres': 'Luis Francisco', 'apellidos': 'Perez Dias', 'tieneVisa': True, 'activo': True},
+    # {'nombres': 'Diego Josue', 'apellidos': 'Monzon Armando', 'tieneVisa': False, 'activo': True},
+    # {'nombres': 'Mario Roberto', 'apellidos': 'Martinez Sandobal', 'tieneVisa': True, 'activo': False},
+    # {'nombres': 'Daniel Esteban', 'apellidos': 'Sanchez Martinez', 'tieneVisa': True, 'activo': True},
+    # {'nombres': 'Jose Tulio', 'apellidos': 'Jimenez Matul', 'tieneVisa': True, 'activo': True},
+    # {'nombres': 'Diego Josue', 'apellidos': 'Monzon Armando', 'tieneVisa': False, 'activo': True},
+    # {'nombres': 'Mario Roberto', 'apellidos': 'Martinez Sandobal', 'tieneVisa': True, 'activo': False},
+    # {'nombres': 'Daniel Esteban', 'apellidos': 'Sanchez Martinez', 'tieneVisa': True, 'activo': True},
     # {'nombres': 'Jose Tulio', 'apellidos': 'Jimenez Matul', 'tieneVisa': True},
 ]
 
 listPersonas = [Persona(i+1, dtPersona['nombres'], dtPersona['apellidos'],
-                        dtPersona['tieneVisa']) for i, dtPersona in enumerate(data)]
+                        dtPersona['tieneVisa'], dtPersona['activo']) for i, dtPersona in enumerate(data)]
 
 
 def find(id: int):
     return next((persona for persona in listPersonas if persona.codigo == id), None)
+
 
 app = Flask(__name__)
 api = Api(app)
@@ -44,7 +46,8 @@ personaModel = api.model('PersonaModel', {
     'codigo': fields.Integer,
     'nombres': fields.String,
     'apellidos': fields.String,
-    'tieneVisa': fields.Boolean
+    'tieneVisa': fields.Boolean,
+    'activo': fields.Boolean
 })
 
 
@@ -52,19 +55,24 @@ personaModel = api.model('PersonaModel', {
 class PersonasResource(Resource):
 
     parser = reqparse.RequestParser()
-    parser.add_argument('tieneVisa', type=inputs.boolean)
+    parser.add_argument('tieneVisa', type=inputs.boolean, location='args')
+    parser.add_argument('activo', type=inputs.boolean, location='args')
 
     @api.marshal_list_with(personaModel)
     def get(self):
         args = self.parser.parse_args()
-        if args['tieneVisa'] != None:
-            return [persona for persona in listPersonas if persona.tieneVisa == args['tieneVisa']]
+        if args['tieneVisa'] != None or args['activo'] == True:
+            return [persona for persona in listPersonas if persona.tieneVisa == args['tieneVisa'] and persona.activo == args['activo']]
+        elif args['activo'] == False:
+            return [persona for persona in listPersonas if persona.activo == False]
         else:
             return listPersonas
 
     @api.marshal_with(personaModel)
     def post(self):
-        nuevaPersona = Persona(len(listPersonas) + 1, 'Prueba', 'Prueba', False)
+        data = api.payload
+        nuevaPersona = Persona(
+            len(listPersonas) + 1, data['nombres'], data['apellidos'], data['tieneVisa'], activo=True)
         listPersonas.append(nuevaPersona)
         return nuevaPersona
 
@@ -76,9 +84,24 @@ class PersonaResource(Resource):
     def get(self, id):
         return find(id)
 
+    @api.marshal_with(personaModel)
     def put(self, id):
-        persona = find(id)
-        return persona
+        datos = api.payload
+        for persona in listPersonas:
+            if persona.codigo == id:
+                persona.nombres = datos['nombres']
+                persona.apellidos = datos['apellidos']
+                persona.tieneVisa = datos['tieneVisa']
+                return persona
+        return None
+
+    @api.marshal_with(personaModel)
+    def delete(self, id):
+        for persona in listPersonas:
+            if persona.codigo == id:
+                persona.activo = False
+                return persona
+        return None
 
 
 @api.route('/personas/pg')
