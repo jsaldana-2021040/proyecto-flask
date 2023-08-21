@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_restx import Resource, Api, fields, reqparse, inputs
 from persona import Persona
+from paginacion import Paginacion
 
 data = [
     {'nombres': 'Pedro Andrés', 'apellidos': 'Vega Stalling', 'tieneVisa': True, 'activo': True},
@@ -117,7 +118,8 @@ class PersonaPgResource(Resource):
     def get(self):
         args = self.parser.parse_args()
         indexFinal: int = args['porPagina'] * args['pagina']
-        return listPersonas[indexFinal - args['porPagina']: indexFinal]
+        return Paginacion(len(listPersonas), listPersonas[indexFinal - args['porPagina']: indexFinal], args['pagina'], args['porPagina'])
+        # return listPersonas[indexFinal - args['porPagina']: indexFinal]
 
 
 if __name__ == '__main__':
