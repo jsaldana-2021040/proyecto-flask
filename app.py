@@ -38,7 +38,7 @@ def find(id: int):
     return next((persona for persona in listPersonas if persona.codigo == id), None)
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:robertiño123@localhost:5432/db_pruebas'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:123456@localhost:5432/prueba'
 
 
 api = Api(app)
@@ -74,7 +74,6 @@ class PersonasResource(Resource):
     def get(self):
         args = self.parser.parse_args()
         output: list[Persona] = listPersonas
-
         if args['tieneVisa'] != None:
             output = [persona for persona in output if persona.tieneVisa == args['tieneVisa']]
         if args['activo'] != None:
