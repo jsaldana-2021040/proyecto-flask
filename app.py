@@ -2,7 +2,10 @@ from flask import Flask
 from flask_restx import Resource, Api, fields, reqparse, inputs
 from persona import Persona
 from paginacion import Paginacion
-from database import db, Personas
+from models import Personas, Empresas
+from database import db
+from database import migration
+from sqlalchemy.exc import IntegrityError
 
 data = [
     {'nombres': 'Pedro Andrés', 'apellidos': 'Vega Stalling', 'tieneVisa': True, 'activo': True},
@@ -38,17 +41,26 @@ def find(id: int):
     return next((persona for persona in listPersonas if persona.codigo == id), None)
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:robertiño123@localhost:5432/db_pruebas'
+migration.init_app(app, db)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:123456@localhost:5432/prueba'
 
 
 api = Api(app)
 db.init_app(app)
-
 personaModel = api.model('PersonaModel', {
     'codigo': fields.Integer,
     'nombres': fields.String,
     'apellidos': fields.String,
     'tieneVisa': fields.Boolean,
+    'activo': fields.Boolean,
+    'id_empresa': fields.Integer
+})
+
+empresaModel = api.model('EmpresaModel', {
+    'id': fields.Integer,
+    'nombre': fields.String,
+    'direccion': fields.String,
+    'telefono': fields.String,
     'activo': fields.Boolean
 })
 
@@ -72,25 +84,20 @@ class PersonasResource(Resource):
 
     @api.marshal_list_with(personaModel)
     def get(self):
-        args = self.parser.parse_args()
-        output: list[Persona] = listPersonas
-
-        if args['tieneVisa'] != None:
-            output = [persona for persona in output if persona.tieneVisa == args['tieneVisa']]
-        if args['activo'] != None:
-            output = [persona for persona in output if persona.activo == args['activo']]
-        if args['nombres'] != None:
-            output = [persona for persona in output if args['nombres'].upper() in persona.nombres.upper()]
-        if args['apellidos'] != None:
-            output = [persona for persona in output if args['apellidos'].upper() in persona.apellidos.upper()]
-        return output
+        personasList = db.session.query(Personas).all()
+        print(personasList)
+        return personasList
 
     @api.marshal_with(personaModel)
     def post(self):
-        data = api.payload
-        nuevaPersona = Persona(len(listPersonas) + 1, data['nombres'], data['apellidos'], data['tieneVisa'], activo=True)
-        listPersonas.append(nuevaPersona)
-        return nuevaPersona
+        try:
+            datos = api.payload
+            persona = Personas(nombres= datos['nombres'], apellidos=datos['apellidos'],
+                           tieneVisa=datos['tieneVisa'], id_empresa= datos['id_empresa'])
+            db.session.add(persona)
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
 
 
 @api.route('/personas/<int:id>')
@@ -103,21 +110,17 @@ class PersonaResource(Resource):
     @api.marshal_with(personaModel)
     def put(self, id):
         datos = api.payload
-        for persona in listPersonas:
-            if persona.codigo == id:
-                persona.nombres = datos['nombres']
-                persona.apellidos = datos['apellidos']
-                persona.tieneVisa = datos['tieneVisa']
-                return persona
-        return None
+        persona =  db.session.query(Personas).get(id)
+        persona.nombres = datos['nombres']
+        persona.apellidos = datos['apellidos'] 
+        persona.tieneVisa = datos['tieneVisa']
+        db.session.commit()
 
     @api.marshal_with(personaModel)
     def delete(self, id):
-        for persona in listPersonas:
-            if persona.codigo == id:
-                persona.activo = False
-                return persona
-        return None
+        persona =  db.session.query(Personas).get(id)
+        persona.activo = False
+        db.session.commit()
 
 
 @api.route('/personas/pg')
@@ -148,6 +151,46 @@ class PersonaPgResource(Resource):
         indexFinal: int = args['porPagina'] * args['pagina']
         return Paginacion(len(output), output[indexFinal - args['porPagina']: indexFinal], args['pagina'], args['porPagina'])
         # return listPersonas[indexFinal - args['porPagina']: indexFinal]
+
+
+@api.route('/empresas')
+class EmpresasResource(Resource):
+
+    @api.marshal_list_with(empresaModel)
+    def get(self):
+        empresaList = db.session.query(Empresas).all()
+        print(empresaList)
+        return empresaList
+
+    @api.marshal_with(empresaModel)
+    def post(self):
+            datos = api.payload
+            empresa = Empresas(nombre = datos['nombre'], direccion = datos['direccion'], telefono = datos['telefono'])
+            db.session.add(empresa)
+            db.session.commit()
+
+
+@api.route('/empresas/<int:id>')
+class EmpresasResource(Resource):
+
+    @api.marshal_with(empresaModel)
+    def get(self, id):
+        return db.session.query(Empresas).get(id)
+
+    @api.marshal_with(empresaModel)
+    def put(self, id):
+        datos = api.payload
+        empresa =  db.session.query(Empresas).get(id)
+        empresa.nombre = datos['nombre']
+        empresa.direccion = datos['direccion']
+        empresa.telefono = datos['telefono']
+        db.session.commit()
+
+    @api.marshal_with(empresaModel)
+    def delete(self, id):
+        empresa =  db.session.query(Empresas).get(id)
+        empresa.activo = False
+        db.session.commit()
 
 
 if __name__ == '__main__':
