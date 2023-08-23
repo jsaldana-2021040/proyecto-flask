@@ -4,4 +4,5 @@ from flask_migrate import Migrate
 migration = Migrate()
 db = SQLAlchemy()
 
-from models.personas import *
+from .personas import *
+from .empresas import *
