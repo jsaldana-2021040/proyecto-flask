@@ -2,7 +2,7 @@ from flask_restx import fields
 from . import api
 
 personaModel = api.model('PersonaModel', {
-    'codigo': fields.Integer,
+    'codPersona': fields.Integer,
     'nombres': fields.String,
     'apellidos': fields.String,
     'tieneVisa': fields.Boolean,
