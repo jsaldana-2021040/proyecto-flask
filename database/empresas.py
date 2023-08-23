@@ -8,3 +8,5 @@ class Empresas(db.Model):
     direccion: str = db.Column('direccion',  db.String(100), nullable=True)
     telefono: str = db.Column('telefono', db.String(12), nullable=False)
     activo: bool = db.Column('activo', db.Boolean, nullable=True, default=True)
+
+    personas = db.relationship('Personas', backref='empresa', lazy=True)
