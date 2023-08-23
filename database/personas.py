@@ -8,4 +8,4 @@ class Personas(db.Model):
     apellidos: str = db.Column('apellidos',  db.String(100), nullable=False)
     tieneVisa: bool = db.Column('tiene_visa', db.Boolean, nullable=True)
     activo: bool = db.Column('activo', db.Boolean, nullable=True, default=True)
-    empresaCod = db.Column('empresa_cod', db.SmallInteger, db.ForeignKey('public.empresas.cod_empresa'), nullable=False)
+    empresaCod = db.Column('empresa_cod', db.SmallInteger, db.ForeignKey('empresas.cod_empresa'), nullable=False)
