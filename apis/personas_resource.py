@@ -2,6 +2,7 @@ from flask_restx import Resource, reqparse, inputs
 from database import db, Personas
 from . import api
 from .models import personaModel, PaginacionModel
+from paginacion import Paginacion
 
 @api.route('/personas')
 class PersonasResource(Resource):
@@ -16,6 +17,7 @@ class PersonasResource(Resource):
     def get(self):
         args = self.parser.parse_args()
         query = db.session.query(Personas)
+        
         if args['tieneVisa'] != None:
             query = query.filter(Personas.tieneVisa == args['tieneVisa'])
         if args['activo'] != None:
@@ -35,7 +37,7 @@ class PersonasResource(Resource):
                 nombres=datos['nombres'],
                 apellidos=datos['apellidos'],
                 tieneVisa=datos['tieneVisa'],
-                id_empresa= datos['id_empresa'])
+                empresaCod= datos['empresa_cod'])
             db.session.add(persona)
             db.session.commit()
             return persona
@@ -47,7 +49,7 @@ class PersonaResource(Resource):
 
     @api.marshal_with(personaModel)
     def get(self, id):
-        pass
+        return db.session.query(Personas).get(id)
 
     @api.marshal_with(personaModel)
     def put(self, id):
@@ -57,16 +59,18 @@ class PersonaResource(Resource):
         persona.apellidos = datos['apellidos'] 
         persona.tieneVisa = datos['tieneVisa']
         db.session.commit()
+        return persona
 
     @api.marshal_with(personaModel)
     def delete(self, id):
         persona =  db.session.query(Personas).get(id)
         persona.activo = False
         db.session.commit()
+        return persona
 
 
 @api.route('/personas/pg')
-class PersonaPgResource(Resource):
+class PersonasPgResource(Resource):
 
     parser = reqparse.RequestParser()
     parser.add_argument('pagina', default=1, type=int)
@@ -76,6 +80,17 @@ class PersonaPgResource(Resource):
     parser.add_argument('nombres', type=str, location='args')
     parser.add_argument('apellidos', type=str, location='args')
 
-    @api.marshal_list_with(PaginacionModel)
+    @api.marshal_with(PaginacionModel)
     def get(self):
-        pass
+        args = self.parser.parse_args()
+        query = db.session.query(Personas)
+        if args['tieneVisa'] != None:
+            query = query.filter(Personas.tieneVisa == args['tieneVisa'])
+        if args['activo'] != None:
+            query = query.filter(Personas.activo == args['activo'])
+        if args['nombres'] != None:
+            query = query.filter(Personas.nombres.ilike('%'+args['nombres']+'%'))
+        if args['apellidos'] != None:
+            query = query.filter(Personas.apellidos.ilike('%'+args['apellidos']+'%'))
+
+        return query.paginate(page=args['pagina'], per_page=args['porPagina'])

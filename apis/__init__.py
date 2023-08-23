@@ -9,4 +9,5 @@ api = Api(
     ordered=True
 )
 
-from .personas_resource import *
+from .personas_resource import PersonaResource, PersonasResource, PersonasPgResource
+from .empresas_resource import EmpresasResource, EmpresaResource, EmpresasPgResource
