@@ -1,6 +1,7 @@
 from flask_restx import fields
 from . import api
 
+# === modelos Persona ===
 personaModel = api.model('PersonaModel', {
     'codPersona': fields.Integer,
     'nombres': fields.String,
@@ -10,6 +11,22 @@ personaModel = api.model('PersonaModel', {
     'empresaCod': fields.Integer
 })
 
+personaBodyRequestModel = api.model('PersonaBodyRequestModel', {
+    'nombres': fields.String(required=True),
+    'apellidos': fields.String(required=True),
+    'tieneVisa': fields.Boolean(required=False),
+    'empresaCod': fields.Integer(required=True)
+})
+
+personasPgModel = api.model('PersonaPgModel', {
+    'total': fields.Integer,
+    'page': fields.Integer,
+    'pages': fields.Integer,
+    'items': fields.List(fields.Nested(personaModel))
+})
+
+# === modelos Empresa ===
+
 empresaModel = api.model('EmpresaModel', {
     'codEmpresa': fields.Integer,
     'nombre': fields.String,
@@ -18,30 +35,7 @@ empresaModel = api.model('EmpresaModel', {
     'activo': fields.Boolean
 })
 
-# PaginacionModel = api.model('PaginacionModel', {
-#     'totalElementos': fields.Integer,
-#     'elementos': fields.List(fields.Nested(personaModel)),
-#     'paginaActual': fields.Integer,
-#     'elementosPorPagina': fields.Integer,
-#     'totalPaginas': fields.Integer
-# })
-
-PaginacionModel = api.model('PaginacionModel', {
-    'total': fields.Integer,
-    'page': fields.Integer,
-    'pages': fields.Integer,
-    'items': fields.List(fields.Nested(personaModel))
-})
-
-# EmpresasPgModel = api.model('EmpresasPgModel', {
-#     'totalElementos': fields.Integer,
-#     'elementos': fields.List(fields.Nested(empresaModel)),
-#     'paginaActual': fields.Integer,
-#     'elementosPorPagina': fields.Integer,
-#     'totalPaginas': fields.Integer
-# })
-
-EmpresasPgModel = api.model('EmpresasPgModel', {
+empresasPgModel = api.model('EmpresasPgModel', {
     'total': fields.Integer,
     'page': fields.Integer,
     'pages': fields.Integer,

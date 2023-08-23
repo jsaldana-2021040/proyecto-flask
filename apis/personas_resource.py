@@ -1,7 +1,7 @@
 from flask_restx import Resource, reqparse, inputs, abort
 from database import db, Personas
 from . import api
-from .models import personaModel, PaginacionModel
+from .models import personaModel, personasPgModel, personaBodyRequestModel
 from paginacion import Paginacion
 
 @api.route('/personas')
@@ -13,6 +13,7 @@ class PersonasResource(Resource):
     parser.add_argument('nombres', type=str, location='args')
     parser.add_argument('apellidos', type=str, location='args')
 
+    @api.expect(parser)
     @api.marshal_list_with(personaModel)
     def get(self):
         args = self.parser.parse_args()
@@ -29,6 +30,7 @@ class PersonasResource(Resource):
 
         return query.order_by(Personas.codPersona).all()
 
+    @api.expect(personaBodyRequestModel, validate=True)
     @api.marshal_with(personaModel)
     def post(self):
         try:
@@ -80,7 +82,7 @@ class PersonasPgResource(Resource):
     parser.add_argument('nombres', type=str, location='args')
     parser.add_argument('apellidos', type=str, location='args')
 
-    @api.marshal_with(PaginacionModel)
+    @api.marshal_with(personasPgModel)
     def get(self):
         args = self.parser.parse_args()
         query = db.session.query(Personas)

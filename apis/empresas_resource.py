@@ -1,7 +1,7 @@
 from flask_restx import Resource, reqparse, inputs
 from database import db, Empresas
 from . import api
-from .models import empresaModel, PaginacionModel, EmpresasPgModel
+from .models import empresaModel, personasPgModel, empresasPgModel
 
 @api.route('/empresas')
 class EmpresasResource(Resource):
@@ -75,7 +75,7 @@ class EmpresasPgResource(Resource):
     parser.add_argument('direccion', type=str, location='args')
     parser.add_argument('activo', type=inputs.boolean, location='args')
 
-    @api.marshal_with(EmpresasPgModel)
+    @api.marshal_with(empresasPgModel)
     def get(self):
         args = self.parser.parse_args()
         query = db.session.query(Empresas)
