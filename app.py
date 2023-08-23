@@ -42,7 +42,7 @@ def find(id: int):
 
 app = Flask(__name__)
 migration.init_app(app, db)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:123456@localhost:5432/prueba'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:d3v-database@10.20.20.6:5432/practicas'
 
 
 api = Api(app)
@@ -53,7 +53,7 @@ personaModel = api.model('PersonaModel', {
     'apellidos': fields.String,
     'tieneVisa': fields.Boolean,
     'activo': fields.Boolean,
-    'id_empresa': fields.Integer
+    'idEmpresa': fields.Integer
 })
 
 empresaModel = api.model('EmpresaModel', {
@@ -84,17 +84,28 @@ class PersonasResource(Resource):
 
     @api.marshal_list_with(personaModel)
     def get(self):
-        personasList = db.session.query(Personas).all()
-        print(personasList)
-        return personasList
+        args = self.parser.parse_args()
+        query = db.session.query(Personas)
+        if args['tieneVisa'] != None:
+            query = query.filter(Personas.tieneVisa == args['tieneVisa'])
+        if args['activo'] != None:
+            query = query.filter(Personas.activo == args['activo'])
+        if args['nombres'] != None:
+            query = query.filter(Personas.nombres.ilike('%'+args['nombres']+'%'))
+        if args['apellidos'] != None:
+            query = query.filter(Personas.apellidos.ilike('%'+args['apellidos']+'%'))
+
+        return query.all()
 
     @api.marshal_with(personaModel)
     def post(self):
         try:
-            print('hola')
             datos = api.payload
-            persona = Personas(nombres= datos['nombres'], apellidos=datos['apellidos'],
-                           tieneVisa=datos['tieneVisa'], id_empresa= datos['id_empresa'])
+            persona = Personas(
+                nombres=datos['nombres'],
+                apellidos=datos['apellidos'],
+                tieneVisa=datos['tieneVisa'],
+                id_empresa= datos['id_empresa'])
             db.session.add(persona)
             db.session.commit()
         except IntegrityError:
