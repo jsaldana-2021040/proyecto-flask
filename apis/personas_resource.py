@@ -38,6 +38,7 @@ class PersonasResource(Resource):
                 id_empresa= datos['id_empresa'])
             db.session.add(persona)
             db.session.commit()
+            return persona
         except:
             db.session.rollback()
 
