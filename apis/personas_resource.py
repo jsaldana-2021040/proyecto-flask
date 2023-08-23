@@ -53,6 +53,7 @@ class PersonaResource(Resource):
     def get(self, id):
         return db.session.query(Personas).get(id)
 
+    @api.expect(personaBodyRequestModel, validate=True)
     @api.marshal_with(personaModel)
     def put(self, id):
         datos = api.payload
@@ -82,6 +83,7 @@ class PersonasPgResource(Resource):
     parser.add_argument('nombres', type=str, location='args')
     parser.add_argument('apellidos', type=str, location='args')
 
+    @api.expect(parser)
     @api.marshal_with(personasPgModel)
     def get(self):
         args = self.parser.parse_args()

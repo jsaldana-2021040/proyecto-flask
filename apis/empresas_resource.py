@@ -1,7 +1,7 @@
 from flask_restx import Resource, reqparse, inputs
 from database import db, Empresas
 from . import api
-from .models import empresaModel, personasPgModel, empresasPgModel
+from .models import empresaModel, personasPgModel, empresasPgModel, empresaBodyRequestModel
 
 @api.route('/empresas')
 class EmpresasResource(Resource):
@@ -12,6 +12,7 @@ class EmpresasResource(Resource):
     parser.add_argument('direccion', type=str, location='args')
     parser.add_argument('activo', type=inputs.boolean, location='args')
 
+    @api.expect(parser)
     @api.marshal_list_with(empresaModel)
     def get(self):
         args = self.parser.parse_args()
@@ -28,6 +29,7 @@ class EmpresasResource(Resource):
         
         return query.order_by(Empresas.codEmpresa).all()
 
+    @api.expect(empresaBodyRequestModel, validate=True)
     @api.marshal_with(empresaModel)
     def post(self):
             try:
@@ -47,6 +49,7 @@ class EmpresaResource(Resource):
     def get(self, id):
         return db.session.query(Empresas).get(id)
 
+    @api.expect(empresaBodyRequestModel, validate=True)
     @api.marshal_with(empresaModel)
     def put(self, id):
         datos = api.payload
@@ -75,6 +78,7 @@ class EmpresasPgResource(Resource):
     parser.add_argument('direccion', type=str, location='args')
     parser.add_argument('activo', type=inputs.boolean, location='args')
 
+    @api.expect(parser)
     @api.marshal_with(empresasPgModel)
     def get(self):
         args = self.parser.parse_args()

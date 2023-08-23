@@ -35,6 +35,12 @@ empresaModel = api.model('EmpresaModel', {
     'activo': fields.Boolean
 })
 
+empresaBodyRequestModel = api.model('EmpresaBodyRequestModel', {
+    'nombre': fields.String(required=True),
+    'direccion': fields.String(required=True),
+    'telefono': fields.String(required=False),
+})
+
 empresasPgModel = api.model('EmpresasPgModel', {
     'total': fields.Integer,
     'page': fields.Integer,
