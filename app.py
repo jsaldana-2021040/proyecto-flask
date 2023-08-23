@@ -91,6 +91,7 @@ class PersonasResource(Resource):
     @api.marshal_with(personaModel)
     def post(self):
         try:
+            print('hola')
             datos = api.payload
             persona = Personas(nombres= datos['nombres'], apellidos=datos['apellidos'],
                            tieneVisa=datos['tieneVisa'], id_empresa= datos['id_empresa'])
