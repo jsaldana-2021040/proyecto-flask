@@ -1,10 +1,10 @@
-from flask_restx import Resource, reqparse, inputs, abort
+from flask_restx import Namespace, Resource, reqparse, inputs, abort
 from database import db, Personas
-from . import api
 from .models import personaModel, personasPgModel, personaBodyRequestModel
-from paginacion import Paginacion
 
-@api.route('/personas')
+ns = Namespace('Personas')
+
+@ns.route('')
 class PersonasResource(Resource):
 
     parser = reqparse.RequestParser()
@@ -13,8 +13,8 @@ class PersonasResource(Resource):
     parser.add_argument('nombres', type=str, location='args')
     parser.add_argument('apellidos', type=str, location='args')
 
-    @api.expect(parser)
-    @api.marshal_list_with(personaModel)
+    @ns.expect(parser)
+    @ns.marshal_list_with(personaModel)
     def get(self):
         args = self.parser.parse_args()
         query = db.session.query(Personas)
@@ -30,11 +30,11 @@ class PersonasResource(Resource):
 
         return query.order_by(Personas.codPersona).all()
 
-    @api.expect(personaBodyRequestModel, validate=True)
-    @api.marshal_with(personaModel)
+    @ns.expect(personaBodyRequestModel, validate=True)
+    @ns.marshal_with(personaModel)
     def post(self):
         try:
-            datos = api.payload
+            datos = ns.payload
             persona = Personas(
                 nombres=datos['nombres'],
                 apellidos=datos['apellidos'],
@@ -46,17 +46,17 @@ class PersonasResource(Resource):
         except:
             abort(500, 'Error al guardar a la persona')
 
-@api.route('/personas/<int:id>')
+@ns.route('/<int:id>')
 class PersonaResource(Resource):
 
-    @api.marshal_with(personaModel)
+    @ns.marshal_with(personaModel)
     def get(self, id):
         return db.session.query(Personas).get(id)
 
-    @api.expect(personaBodyRequestModel, validate=True)
-    @api.marshal_with(personaModel)
+    @ns.expect(personaBodyRequestModel, validate=True)
+    @ns.marshal_with(personaModel)
     def put(self, id):
-        datos = api.payload
+        datos = ns.payload
         persona =  db.session.query(Personas).get(id)
         persona.nombres = datos['nombres']
         persona.apellidos = datos['apellidos'] 
@@ -64,7 +64,7 @@ class PersonaResource(Resource):
         db.session.commit()
         return persona
 
-    @api.marshal_with(personaModel)
+    @ns.marshal_with(personaModel)
     def delete(self, id):
         persona =  db.session.query(Personas).get(id)
         persona.activo = False
@@ -72,7 +72,7 @@ class PersonaResource(Resource):
         return persona
 
 
-@api.route('/personas/pg')
+@ns.route('/pg')
 class PersonasPgResource(Resource):
 
     parser = reqparse.RequestParser()
@@ -83,8 +83,8 @@ class PersonasPgResource(Resource):
     parser.add_argument('nombres', type=str, location='args')
     parser.add_argument('apellidos', type=str, location='args')
 
-    @api.expect(parser)
-    @api.marshal_with(personasPgModel)
+    @ns.expect(parser)
+    @ns.marshal_with(personasPgModel)
     def get(self):
         args = self.parser.parse_args()
         query = db.session.query(Personas)

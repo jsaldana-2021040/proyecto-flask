@@ -1,9 +1,10 @@
-from flask_restx import Resource, reqparse, inputs
+from flask_restx import Namespace, Resource, reqparse, inputs
 from database import db, Empresas
-from . import api
-from .models import empresaModel, personasPgModel, empresasPgModel, empresaBodyRequestModel
+from .models import empresaModel, empresasPgModel, empresaBodyRequestModel
 
-@api.route('/empresas')
+ns = Namespace('Empresas')
+
+@ns.route('')
 class EmpresasResource(Resource):
 
     parser = reqparse.RequestParser()
@@ -12,8 +13,8 @@ class EmpresasResource(Resource):
     parser.add_argument('direccion', type=str, location='args')
     parser.add_argument('activo', type=inputs.boolean, location='args')
 
-    @api.expect(parser)
-    @api.marshal_list_with(empresaModel)
+    @ns.expect(parser)
+    @ns.marshal_list_with(empresaModel)
     def get(self):
         args = self.parser.parse_args()
         query = db.session.query(Empresas)
@@ -29,11 +30,11 @@ class EmpresasResource(Resource):
         
         return query.order_by(Empresas.codEmpresa).all()
 
-    @api.expect(empresaBodyRequestModel, validate=True)
-    @api.marshal_with(empresaModel)
+    @ns.expect(empresaBodyRequestModel, validate=True)
+    @ns.marshal_with(empresaModel)
     def post(self):
             try:
-                datos = api.payload
+                datos = ns.payload
                 empresa = Empresas(nombre = datos['nombre'], direccion = datos['direccion'], telefono = datos['telefono'])
                 db.session.add(empresa)
                 db.session.commit()
@@ -42,17 +43,17 @@ class EmpresasResource(Resource):
                 db.session.rollback()
 
 
-@api.route('/empresas/<int:id>')
+@ns.route('/<int:id>')
 class EmpresaResource(Resource):
 
-    @api.marshal_with(empresaModel)
+    @ns.marshal_with(empresaModel)
     def get(self, id):
         return db.session.query(Empresas).get(id)
 
-    @api.expect(empresaBodyRequestModel, validate=True)
-    @api.marshal_with(empresaModel)
+    @ns.expect(empresaBodyRequestModel, validate=True)
+    @ns.marshal_with(empresaModel)
     def put(self, id):
-        datos = api.payload
+        datos = ns.payload
         empresa =  db.session.query(Empresas).get(id)
         empresa.nombre = datos['nombre']
         empresa.direccion = datos['direccion']
@@ -60,14 +61,14 @@ class EmpresaResource(Resource):
         db.session.commit()
         return empresa
 
-    @api.marshal_with(empresaModel)
+    @ns.marshal_with(empresaModel)
     def delete(self, id):
         empresa =  db.session.query(Empresas).get(id)
         empresa.activo = False
         db.session.commit()
         return empresa
 
-@api.route('/empresas/pg')
+@ns.route('/pg')
 class EmpresasPgResource(Resource):
 
     parser = reqparse.RequestParser()
@@ -78,8 +79,8 @@ class EmpresasPgResource(Resource):
     parser.add_argument('direccion', type=str, location='args')
     parser.add_argument('activo', type=inputs.boolean, location='args')
 
-    @api.expect(parser)
-    @api.marshal_with(empresasPgModel)
+    @ns.expect(parser)
+    @ns.marshal_with(empresasPgModel)
     def get(self):
         args = self.parser.parse_args()
         query = db.session.query(Empresas)

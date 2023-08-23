@@ -9,5 +9,8 @@ api = Api(
     ordered=True
 )
 
-from .personas_resource import PersonaResource, PersonasResource, PersonasPgResource
-from .empresas_resource import EmpresasResource, EmpresaResource, EmpresasPgResource
+from .empresas_resource import ns as empresas
+from .personas_resource import ns as personas
+
+api.add_namespace(empresas, '/empresas')
+api.add_namespace(personas, '/personas')
