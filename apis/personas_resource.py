@@ -1,4 +1,4 @@
-from flask_restx import Resource, reqparse, inputs
+from flask_restx import Resource, reqparse, inputs, abort
 from database import db, Personas
 from . import api
 from .models import personaModel, PaginacionModel
@@ -27,7 +27,7 @@ class PersonasResource(Resource):
         if args['apellidos'] != None:
             query = query.filter(Personas.apellidos.ilike('%'+args['apellidos']+'%'))
 
-        return query.all()
+        return query.order_by(Personas.codPersona).all()
 
     @api.marshal_with(personaModel)
     def post(self):
@@ -37,12 +37,12 @@ class PersonasResource(Resource):
                 nombres=datos['nombres'],
                 apellidos=datos['apellidos'],
                 tieneVisa=datos['tieneVisa'],
-                empresaCod= datos['empresa_cod'])
+                empresaCod= datos['empresaCod'])
             db.session.add(persona)
             db.session.commit()
             return persona
         except:
-            db.session.rollback()
+            abort(500, 'Error al guardar a la persona')
 
 @api.route('/personas/<int:id>')
 class PersonaResource(Resource):
@@ -93,4 +93,4 @@ class PersonasPgResource(Resource):
         if args['apellidos'] != None:
             query = query.filter(Personas.apellidos.ilike('%'+args['apellidos']+'%'))
 
-        return query.paginate(page=args['pagina'], per_page=args['porPagina'])
+        return query.order_by(Personas.codPersona).paginate(page=args['pagina'], per_page=args['porPagina'])
