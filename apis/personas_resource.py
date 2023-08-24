@@ -41,14 +41,13 @@ class PersonasResource(Resource):
                 tieneVisa=datos['tieneVisa'],
                 empresaCod= datos['empresaCod'])    
             
+            if 'direcciones' in datos:
+                for direccion in datos['direcciones']:
+                    nuevaDireccion = Direcciones(zona = direccion['zona'], direccion = direccion['direccion'])
+                    persona.direcciones.append(nuevaDireccion)
+                
             db.session.add(persona)
             db.session.commit()
-                
-            for direccion in datos['direcciones']:
-                direcciones = Direcciones(zona = direccion['zona'], direccion = direccion['direccion'], personaCod = persona.codPersona)
-                db.session.add(direcciones)
-                db.session.commit()
-                
             return persona
         except:
             abort(500, 'Error al guardar a la persona')
