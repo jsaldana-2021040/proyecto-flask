@@ -1,6 +1,6 @@
 from flask_restx import Namespace, Resource, reqparse, inputs, abort
-from database import db, Personas
-from .models import personaModel, personasPgModel, personaBodyRequestModel
+from database import db, Personas, Direcciones
+from .models import personaModel, personasPgModel, personaBodyRequestModel, direccionModel
 
 ns = Namespace('Personas')
 
@@ -39,12 +39,16 @@ class PersonasResource(Resource):
                 nombres=datos['nombres'],
                 apellidos=datos['apellidos'],
                 tieneVisa=datos['tieneVisa'],
-                empresaCod= datos['empresaCod'])
+                empresaCod= datos['empresaCod'])    
             
-            for direccion in datos['direcciones']:
-                print(direccion['direccion'])
             db.session.add(persona)
             db.session.commit()
+                
+            for direccion in datos['direcciones']:
+                direcciones = Direcciones(zona = direccion['zona'], direccion = direccion['direccion'], personaCod = persona.codPersona)
+                db.session.add(direcciones)
+                db.session.commit()
+                
             return persona
         except:
             abort(500, 'Error al guardar a la persona')

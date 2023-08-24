@@ -5,7 +5,7 @@ from database import migration
 
 app = Flask(__name__)
 migration.init_app(app, db)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:d3v-database@10.20.20.6:5432/practicas'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:123456@localhost/prueba'
 
 db.init_app(app)
 api.init_app(app)
