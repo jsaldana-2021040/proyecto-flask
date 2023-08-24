@@ -1,6 +1,29 @@
 from flask_restx import fields
 from . import api
 
+# === modelos Direcciones ===
+
+direccionModel = api.model('direccionModel', {
+    'codDireccion' : fields.Integer,
+    'direccion' : fields.String,
+    'zona' : fields.String,
+    'activo' : fields.Boolean,
+    'personaCod' : fields.Integer,
+})
+
+direccionBodyRequestModel = api.model('DireccionBodyRequestModel', {
+    'direccion' : fields.String(required=True),
+    'zona' : fields.String(required=True),
+    'personaCod' : fields.Integer(required=False),
+})
+
+direccionesPgModel = api.model('DireccionesPgModel', {
+    'total': fields.Integer,
+    'page': fields.Integer,
+    'pages': fields.Integer,
+    'items': fields.List(fields.Nested(direccionModel))
+})
+
 # === modelos Persona ===
 personaModel = api.model('PersonaModel', {
     'codPersona': fields.Integer,
@@ -8,7 +31,8 @@ personaModel = api.model('PersonaModel', {
     'apellidos': fields.String,
     'tieneVisa': fields.Boolean,
     'activo': fields.Boolean,
-    'empresaCod': fields.Integer
+    'empresaCod': fields.Integer,
+    'direcciones': fields.List(fields.Nested(direccionModel))
 })
 
 personaBodyRequestModel = api.model('PersonaBodyRequestModel', {

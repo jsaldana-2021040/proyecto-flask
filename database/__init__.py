@@ -6,3 +6,4 @@ db = SQLAlchemy()
 
 from .personas import *
 from .empresas import *
+from .direcciones import *
