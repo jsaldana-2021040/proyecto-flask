@@ -14,7 +14,12 @@ direccionModel = api.model('direccionModel', {
 direccionBodyRequestModel = api.model('DireccionBodyRequestModel', {
     'direccion' : fields.String(required=True),
     'zona' : fields.String(required=True),
-    'personaCod' : fields.Integer(required=False),
+    'personaCod' : fields.Integer(required=True),
+})
+
+direccionesPersonaModel = api.model('DireccionesPersonaModel', {
+    'direccion' : fields.String(required=True),
+    'zona' : fields.String(required=True),
 })
 
 direccionesPgModel = api.model('DireccionesPgModel', {
@@ -39,7 +44,8 @@ personaBodyRequestModel = api.model('PersonaBodyRequestModel', {
     'nombres': fields.String(required=True),
     'apellidos': fields.String(required=True),
     'tieneVisa': fields.Boolean(required=False),
-    'empresaCod': fields.Integer(required=True)
+    'empresaCod': fields.Integer(required=True),
+    'direcciones': fields.List(fields.Nested(direccionesPersonaModel), required=False)
 })
 
 personasPgModel = api.model('PersonaPgModel', {

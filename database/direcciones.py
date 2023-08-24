@@ -7,4 +7,4 @@ class Direcciones(db.Model):
     direccion: str = db.Column('direccion',  db.String(150), nullable=True)
     zona: str = db.Column('zona', db.String(50), nullable=False)
     activo: bool = db.Column('activo', db.Boolean, nullable=True, default=True)
-    personaCod  = db.Column('persona_cod', db.SmallInteger, db.ForeignKey('personas.cod_persona'), nullable=False)
+    personaCod = db.Column('persona_cod', db.SmallInteger, db.ForeignKey('personas.cod_persona'), nullable=False)

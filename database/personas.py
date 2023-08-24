@@ -9,4 +9,5 @@ class Personas(db.Model):
     tieneVisa: bool = db.Column('tiene_visa', db.Boolean, nullable=True)
     activo: bool = db.Column('activo', db.Boolean, nullable=True, default=True)
     empresaCod = db.Column('empresa_cod', db.SmallInteger, db.ForeignKey('empresas.cod_empresa'), nullable=False)
-    direcciones = db.relationship('Personas', backref='personas', lazy=True)
+
+    direcciones = db.relationship('Direcciones', backref='personas', lazy=True)

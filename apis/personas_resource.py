@@ -40,6 +40,9 @@ class PersonasResource(Resource):
                 apellidos=datos['apellidos'],
                 tieneVisa=datos['tieneVisa'],
                 empresaCod= datos['empresaCod'])
+            
+            for direccion in datos['direcciones']:
+                print(direccion['direccion'])
             db.session.add(persona)
             db.session.commit()
             return persona
