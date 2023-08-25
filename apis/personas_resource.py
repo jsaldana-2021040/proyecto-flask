@@ -1,6 +1,6 @@
 from flask_restx import Namespace, Resource, reqparse, inputs, abort
 from database import db, Personas, Direcciones
-from .models import personaModel, personasPgModel, personaBodyRequestModel, direccionModel
+from .models import personaModel, personasPgModel, personaBodyRequestModel
 
 ns = Namespace('Personas')
 
@@ -39,7 +39,7 @@ class PersonasResource(Resource):
                 nombres=datos['nombres'],
                 apellidos=datos['apellidos'],
                 tieneVisa=datos['tieneVisa'],
-                empresaCod= datos['empresaCod'])    
+                empresaCod= datos['empresaCod'])
             
             if 'direcciones' in datos:
                 for direccion in datos['direcciones']:
@@ -63,7 +63,7 @@ class PersonaResource(Resource):
     @ns.marshal_with(personaModel)
     def put(self, id):
         datos = ns.payload
-        persona =  db.session.query(Personas).get(id)
+        persona = db.session.query(Personas).get(id)
         persona.nombres = datos['nombres']
         persona.apellidos = datos['apellidos'] 
         persona.tieneVisa = datos['tieneVisa']
@@ -72,7 +72,7 @@ class PersonaResource(Resource):
 
     @ns.marshal_with(personaModel)
     def delete(self, id):
-        persona =  db.session.query(Personas).get(id)
+        persona = db.session.query(Personas).get(id)
         persona.activo = False
         db.session.commit()
         return persona

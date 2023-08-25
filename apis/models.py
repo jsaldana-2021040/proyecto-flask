@@ -1,6 +1,34 @@
 from flask_restx import fields
 from . import api
 
+# === modelo Login ===
+loginModel = api.model('LoginModel', {
+    "access_token": fields.String,
+    "msg": fields.String
+})
+
+# === modelos Direcciones ===
+
+usuarioModel = api.model('UsuarioModel', {
+    'codUsuario' : fields.Integer,
+    'email' : fields.String,
+    'password' : fields.String,
+    'activo' : fields.Boolean,
+    'rolCod' : fields.Integer
+})
+
+usuarioBodyRequestModel = api.model('UsuarioBodyRequestModel', {
+    'email' : fields.String(required=True),
+    'password' : fields.String(required=True),
+})
+
+usuariosPgModel = api.model('UsuariosPgModel', {
+    'total': fields.Integer,
+    'page': fields.Integer,
+    'pages': fields.Integer,
+    'items': fields.List(fields.Nested(usuarioModel))
+})
+
 # === modelos Direcciones ===
 
 direccionModel = api.model('direccionModel', {
