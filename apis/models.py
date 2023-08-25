@@ -1,12 +1,6 @@
 from flask_restx import fields
 from . import api
 
-# === modelo Login ===
-loginModel = api.model('LoginModel', {
-    "access_token": fields.String,
-    "msg": fields.String
-})
-
 # === modelos Direcciones ===
 
 usuarioModel = api.model('UsuarioModel', {

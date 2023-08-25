@@ -8,3 +8,7 @@ class Usuarios(db.Model):
     password: str = db.Column('password',  db.String(8), nullable=False)
     activo: bool = db.Column('activo', db.Boolean, nullable=True, default=True)
     rolCod = db.Column('rol_cod', db.SmallInteger, db.ForeignKey('roles.cod_rol'), nullable=False)
+
+    def getUserByIdentity(identity: str):
+        usuario = db.session.query(Usuarios).filter(Usuarios.email == identity).first()
+        return usuario

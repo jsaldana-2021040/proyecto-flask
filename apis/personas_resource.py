@@ -1,6 +1,7 @@
 from flask_restx import Namespace, Resource, reqparse, inputs, abort
-from database import db, Personas, Direcciones
+from database import db, Personas, Direcciones, Usuarios
 from .models import personaModel, personasPgModel, personaBodyRequestModel
+from flask_jwt_extended import jwt_required, get_jwt, get_jwt_identity
 
 ns = Namespace('Personas')
 

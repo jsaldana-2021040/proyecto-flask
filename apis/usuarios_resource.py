@@ -1,30 +1,9 @@
-from flask_restx import Namespace, Resource, reqparse, inputs
+from flask_restx import Namespace, Resource, reqparse, inputs, abort
 from database import db, Usuarios, Roles
-from .models import usuarioModel, usuarioBodyRequestModel, usuariosPgModel, loginModel
-from sqlalchemy import and_
-from flask import jsonify
-from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+from .models import usuarioModel, usuarioBodyRequestModel, usuariosPgModel
+from flask_jwt_extended import get_jwt_identity, jwt_required
 
 ns = Namespace('Usuarios')
-lg = Namespace('Login')
-
-@lg.route('')
-class LoginResource(Resource):
-    @lg.marshal_with(loginModel)
-    def get(self):
-        datos = ns.payload
-        email = datos['email']
-        password = datos['password']
-        usuarios = db.session.query(Usuarios).filter(and_ (Usuarios.email == email, Usuarios.password == password)).first()
-
-        if usuarios != None:
-            if email == usuarios.email and password == usuarios.password:
-                access_token = create_access_token(identity=email, additional_claims=usuarios.rolCod)
-        else:
-            return jsonify(msg="email o contraseña incorrectas").get_json(), 403
-        
-        return jsonify(access_token=access_token, msg="Succes").get_json(), 200
-        
     
 @ns.route('')
 class UsuariosResource(Resource):
@@ -60,20 +39,19 @@ class UsuariosResource(Resource):
             except:
                 db.session.rollback()
 
-@ns.route('/ADMIN')
+@ns.route('/admin')
 class UsuariosResource(Resource):
 
     @ns.expect(usuarioBodyRequestModel, validate=True)
     @ns.marshal_with(usuarioModel)
     @jwt_required()
     def post(self):
-            current_user = get_jwt_identity()
-            print('autorizado')
+            usuario = Usuarios.getUserByIdentity(get_jwt_identity())
+            if usuario.rol.tipo != "ADMIN":
+                abort(403, 'El usuario no tiene permisos suficientes')
             try:
                 datos = ns.payload
-                roles = db.session.query(Roles).filter(Roles.tipo == "ADMIN").first()
-                print(roles)
-                usuario = Usuarios(email = datos['email'], password = datos['password'], rolCod = roles.codRol)
+                usuario = Usuarios(email = datos['email'], password = datos['password'], rolCod = usuario.rolCod)
                 db.session.add(usuario)
                 db.session.commit()
                 return usuario

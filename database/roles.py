@@ -6,4 +6,4 @@ class Roles(db.Model):
     codRol: int = db.Column('cod_rol', db.SmallInteger, nullable=False, primary_key=True, autoincrement=True)
     tipo: str = db.Column('tipo',  db.String(50), nullable=False)
 
-    usuarios = db.relationship('Usuarios', backref='roles', lazy=True)
+    usuarios = db.relationship('Usuarios', backref='rol', lazy=True)

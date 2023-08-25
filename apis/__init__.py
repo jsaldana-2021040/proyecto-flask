@@ -13,7 +13,7 @@ from .empresas_resource import ns as empresas
 from .personas_resource import ns as personas
 from .direcciones_resource import ns as direcciones
 from .usuarios_resource import ns as usuarios
-from .usuarios_resource import lg as login
+from .login_resource import lg as login
 
 api.add_namespace(empresas, '/empresas')
 api.add_namespace(personas, '/personas')
