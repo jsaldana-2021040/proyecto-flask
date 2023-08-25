@@ -1,11 +1,18 @@
 from flask_restx import Api
 
+authorizations = {
+    'apikey': {
+        'type': 'apiKey',
+        'in': 'header',
+        'name': 'Authorization'
+    }
+}
+
 api = Api(
     title='Core API',
     version='1.0',
     description='API',
-    # authorizations=authorizations,
-    # security='token',
+    authorizations=authorizations,
     ordered=True
 )
 

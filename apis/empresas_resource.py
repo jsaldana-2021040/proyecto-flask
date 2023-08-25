@@ -1,6 +1,7 @@
-from flask_restx import Namespace, Resource, reqparse, inputs
-from database import db, Empresas
+from flask_restx import Namespace, Resource, reqparse, inputs, abort
+from database import db, Empresas, Usuarios
 from .models import empresaModel, empresasPgModel, empresaBodyRequestModel
+from flask_jwt_extended import get_jwt_identity, jwt_required
 
 ns = Namespace('Empresas')
 
@@ -32,7 +33,13 @@ class EmpresasResource(Resource):
 
     @ns.expect(empresaBodyRequestModel, validate=True)
     @ns.marshal_with(empresaModel)
+    @jwt_required()
     def post(self):
+            
+            usuario = Usuarios.getUserByIdentity(get_jwt_identity())
+            if usuario.rol.tipo != "ADMIN":
+                abort(403, 'El usuario no tiene permisos suficientes')
+                
             try:
                 datos = ns.payload
                 empresa = Empresas(nombre = datos['nombre'], direccion = datos['direccion'], telefono = datos['telefono'])
@@ -52,7 +59,13 @@ class EmpresaResource(Resource):
 
     @ns.expect(empresaBodyRequestModel, validate=True)
     @ns.marshal_with(empresaModel)
+    @jwt_required()
     def put(self, id):
+
+        usuario = Usuarios.getUserByIdentity(get_jwt_identity())
+        if usuario.rol.tipo != "ADMIN":
+            abort(403, 'El usuario no tiene permisos suficientes')
+        
         datos = ns.payload
         empresa =  db.session.query(Empresas).get(id)
         empresa.nombre = datos['nombre']
@@ -62,7 +75,13 @@ class EmpresaResource(Resource):
         return empresa
 
     @ns.marshal_with(empresaModel)
+    @jwt_required()
     def delete(self, id):
+
+        usuario = Usuarios.getUserByIdentity(get_jwt_identity())
+        if usuario.rol.tipo != "ADMIN":
+            abort(403, 'El usuario no tiene permisos suficientes')
+
         empresa =  db.session.query(Empresas).get(id)
         empresa.activo = False
         db.session.commit()

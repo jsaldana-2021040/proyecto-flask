@@ -45,6 +45,7 @@ class UsuariosResource(Resource):
     @ns.expect(usuarioBodyRequestModel, validate=True)
     @ns.marshal_with(usuarioModel)
     @jwt_required()
+    @ns.doc(security='apikey')
     def post(self):
             usuario = Usuarios.getUserByIdentity(get_jwt_identity())
             if usuario.rol.tipo != "ADMIN":
@@ -68,7 +69,13 @@ class UsuarioResource(Resource):
 
     @ns.expect(usuarioBodyRequestModel, validate=True)
     @ns.marshal_with(usuarioModel)
+    @jwt_required()
     def put(self, id):
+
+        usuario = Usuarios.getUserByIdentity(get_jwt_identity())
+        if usuario.rol.tipo != "ADMIN":
+            abort(403, 'El usuario no tiene permisos suficientes')
+       
         datos = ns.payload
         usuario =  db.session.query(Usuarios).get(id)
         usuario.email = datos['email']
@@ -77,7 +84,13 @@ class UsuarioResource(Resource):
         return usuario
 
     @ns.marshal_with(usuarioModel)
+    @jwt_required()
     def delete(self, id):
+        
+        usuario = Usuarios.getUserByIdentity(get_jwt_identity())
+        if usuario.rol.tipo != "ADMIN":
+            abort(403, 'El usuario no tiene permisos suficientes')
+        
         usuario =  db.session.query(Usuarios).get(id)
         usuario.activo = False
         db.session.commit()
