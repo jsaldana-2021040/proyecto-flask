@@ -33,7 +33,13 @@ class PersonasResource(Resource):
 
     @ns.expect(personaBodyRequestModel, validate=True)
     @ns.marshal_with(personaModel)
+    @jwt_required()
     def post(self):
+        
+        usuario = Usuarios.getUserByIdentity(get_jwt_identity())
+        if usuario.rol.tipo != "ADMIN":
+            abort(403, 'El usuario no tiene permisos suficientes')
+        
         try:
             datos = ns.payload
             persona = Personas(
@@ -62,7 +68,13 @@ class PersonaResource(Resource):
 
     @ns.expect(personaBodyRequestModel, validate=True)
     @ns.marshal_with(personaModel)
+    @jwt_required()
     def put(self, id):
+        
+        usuario = Usuarios.getUserByIdentity(get_jwt_identity())
+        if usuario.rol.tipo != "ADMIN":
+            abort(403, 'El usuario no tiene permisos suficientes')
+        
         datos = ns.payload
         persona = db.session.query(Personas).get(id)
         persona.nombres = datos['nombres']
@@ -72,7 +84,13 @@ class PersonaResource(Resource):
         return persona
 
     @ns.marshal_with(personaModel)
+    @jwt_required()
     def delete(self, id):
+        
+        usuario = Usuarios.getUserByIdentity(get_jwt_identity())
+        if usuario.rol.tipo != "ADMIN":
+            abort(403, 'El usuario no tiene permisos suficientes')
+        
         persona = db.session.query(Personas).get(id)
         persona.activo = False
         db.session.commit()

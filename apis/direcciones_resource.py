@@ -1,6 +1,7 @@
-from flask_restx import Namespace, Resource, reqparse, inputs
-from database import db, Direcciones
+from flask_restx import Namespace, Resource, reqparse, inputs, abort
+from database import db, Direcciones, Usuarios
 from .models import direccionModel, direccionBodyRequestModel, direccionesPgModel
+from flask_jwt_extended import get_jwt_identity, jwt_required
 
 ns = Namespace('Direcciones')
 
@@ -29,7 +30,13 @@ class DireccionesResource(Resource):
 
     @ns.expect(direccionBodyRequestModel, validate=True)
     @ns.marshal_with(direccionModel)
+    @jwt_required()
     def post(self):
+            
+            usuario = Usuarios.getUserByIdentity(get_jwt_identity())
+            if usuario.rol.tipo != "ADMIN":
+                abort(403, 'El usuario no tiene permisos suficientes')
+
             try:
                 datos = ns.payload
                 direccion = Direcciones(zona = datos['zona'], direccion = datos['direccion'], personaCod = datos['personaCod'])
@@ -49,7 +56,13 @@ class DireccionResource(Resource):
 
     @ns.expect(direccionBodyRequestModel, validate=True)
     @ns.marshal_with(direccionModel)
+    @jwt_required()
     def put(self, id):
+
+        usuario = Usuarios.getUserByIdentity(get_jwt_identity())
+        if usuario.rol.tipo != "ADMIN":
+                abort(403, 'El usuario no tiene permisos suficientes')
+
         datos = ns.payload
         direccion =  db.session.query(Direcciones).get(id)
         direccion.zona = datos['zona']
@@ -58,6 +71,7 @@ class DireccionResource(Resource):
         return direccion
 
     @ns.marshal_with(direccionModel)
+    @jwt_required()
     def delete(self, id):
         direccion =  db.session.query(Direcciones).get(id)
         direccion.activo = False

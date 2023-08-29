@@ -25,5 +25,5 @@ class LoginResource(Resource):
             return abort(403, 'email incorrecto')
         if usuario.password != password:
             abort(403, 'contraseña incorrecta')
-        return create_access_token(identity=email, additional_claims={'rolCod': usuario.rolCod})
+        return create_access_token(identity=email)
             
