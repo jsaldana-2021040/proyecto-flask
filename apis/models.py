@@ -51,32 +51,6 @@ direccionesPgModel = api.model('DireccionesPgModel', {
     'items': fields.List(fields.Nested(direccionModel))
 })
 
-# === modelos Persona ===
-personaModel = api.model('PersonaModel', {
-    'codPersona': fields.Integer,
-    'nombres': fields.String,
-    'apellidos': fields.String,
-    'tieneVisa': fields.Boolean,
-    'activo': fields.Boolean,
-    'empresaCod': fields.Integer,
-    'direcciones': fields.List(fields.Nested(direccionModel))
-})
-
-personaBodyRequestModel = api.model('PersonaBodyRequestModel', {
-    'nombres': fields.String(required=True),
-    'apellidos': fields.String(required=True),
-    'tieneVisa': fields.Boolean(required=False),
-    'empresaCod': fields.Integer(required=True),
-    'direcciones': fields.List(fields.Nested(direccionesPersonaModel), required=False)
-})
-
-personasPgModel = api.model('PersonaPgModel', {
-    'total': fields.Integer,
-    'page': fields.Integer,
-    'pages': fields.Integer,
-    'items': fields.List(fields.Nested(personaModel))
-})
-
 # === modelos Empresa ===
 
 empresaModel = api.model('EmpresaModel', {
@@ -98,4 +72,32 @@ empresasPgModel = api.model('EmpresasPgModel', {
     'page': fields.Integer,
     'pages': fields.Integer,
     'items': fields.List(fields.Nested(empresaModel))
+})
+
+# === modelos Persona ===
+
+personaModel = api.model('PersonaModel', {
+    'codPersona': fields.Integer,
+    'nombres': fields.String,
+    'apellidos': fields.String,
+    'tieneVisa': fields.Boolean,
+    'activo': fields.Boolean,
+    'empresaCod': fields.Integer,
+    'empresa': fields.Nested(empresaModel),
+    'direcciones': fields.List(fields.Nested(direccionModel))
+})
+
+personaBodyRequestModel = api.model('PersonaBodyRequestModel', {
+    'nombres': fields.String(required=True),
+    'apellidos': fields.String(required=True),
+    'tieneVisa': fields.Boolean(required=False),
+    'empresaCod': fields.Integer(required=True),
+    'direcciones': fields.List(fields.Nested(direccionesPersonaModel), required=False)
+})
+
+personasPgModel = api.model('PersonaPgModel', {
+    'total': fields.Integer,
+    'page': fields.Integer,
+    'pages': fields.Integer,
+    'items': fields.List(fields.Nested(personaModel))
 })

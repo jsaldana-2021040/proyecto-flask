@@ -20,9 +20,6 @@ class EmpresasResource(Resource):
         args = self.parser.parse_args()
         query = db.session.query(Empresas)
 
-        import time
-        time.sleep(3)
-
         if args['nombre'] != None:
             query = query.filter(Empresas.nombre.ilike('%'+args['nombre']+'%'))
         if args['telefono'] != None:
