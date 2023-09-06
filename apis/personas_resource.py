@@ -16,7 +16,13 @@ class PersonasResource(Resource):
 
     @ns.expect(parser)
     @ns.marshal_list_with(personaModel)
+    @jwt_required()
     def get(self):
+
+        usuario = Usuarios.getUserByIdentity(get_jwt_identity())
+        if usuario.rol.tipo != "ADMIN":
+            abort(403, 'El usuario no tiene permisos suficientes')
+
         args = self.parser.parse_args()
         query = db.session.query(Personas)
         

@@ -2,6 +2,7 @@ from flask_restx import Namespace, Resource, reqparse, inputs, abort
 from database import db, Usuarios, Roles
 from .models import usuarioModel, usuarioBodyRequestModel, usuariosPgModel
 from flask_jwt_extended import get_jwt_identity, jwt_required
+from flask_bcrypt import Bcrypt
 
 ns = Namespace('Usuarios')
     
@@ -14,7 +15,13 @@ class UsuariosResource(Resource):
 
     @ns.expect(parser)
     @ns.marshal_list_with(usuarioModel)
+    @jwt_required()
     def get(self):
+
+        usuario = Usuarios.getUserByIdentity(get_jwt_identity())
+        if usuario.rol.tipo != "ADMIN":
+            abort(403, 'El usuario no tiene permisos suficientes')
+
         args = self.parser.parse_args()
         query = db.session.query(Usuarios)
 
@@ -30,11 +37,15 @@ class UsuariosResource(Resource):
     def post(self):
             try:
                 datos = ns.payload
+
+                bcrypt = Bcrypt()
+                pw_hash = bcrypt.generate_password_hash(datos['password']).decode('utf-8')
+
                 roles = db.session.query(Roles).filter(Roles.tipo == "CLIENT").first()
-                print(roles)
-                usuario = Usuarios(email = datos['email'], password = datos['password'], rolCod = roles.codRol)
+                usuario = Usuarios(email = datos['email'], password = pw_hash, rolCod = roles.codRol)               
                 db.session.add(usuario)
                 db.session.commit()
+                print(usuario.password)
                 return usuario
             except:
                 db.session.rollback()
@@ -47,9 +58,11 @@ class UsuariosResource(Resource):
     @jwt_required()
     @ns.doc(security='apikey')
     def post(self):
+            
             usuario = Usuarios.getUserByIdentity(get_jwt_identity())
             if usuario.rol.tipo != "ADMIN":
                 abort(403, 'El usuario no tiene permisos suficientes')
+                
             try:
                 datos = ns.payload
                 usuario = Usuarios(email = datos['email'], password = datos['password'], rolCod = usuario.rolCod)

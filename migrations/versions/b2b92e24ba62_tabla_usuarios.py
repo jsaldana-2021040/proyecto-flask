@@ -21,7 +21,7 @@ def upgrade():
     op.create_table('usuarios',
     sa.Column('cod_usuario', sa.SmallInteger(), autoincrement=True, nullable=False),
     sa.Column('email', sa.String(length=50), nullable=False),
-    sa.Column('password', sa.String(length=8), nullable=False),
+    sa.Column('password', sa.String(length=60), nullable=False),
     sa.Column('activo', sa.Boolean(), nullable=True),
     sa.PrimaryKeyConstraint('cod_usuario')
     )
