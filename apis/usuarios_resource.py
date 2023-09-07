@@ -35,20 +35,20 @@ class UsuariosResource(Resource):
     @ns.expect(usuarioBodyRequestModel, validate=True)
     @ns.marshal_with(usuarioModel)
     def post(self):
-            try:
-                datos = ns.payload
+            datos = ns.payload
 
-                bcrypt = Bcrypt()
-                pw_hash = bcrypt.generate_password_hash(datos['password']).decode('utf-8')
+            bcrypt = Bcrypt()
+            pw_hash = bcrypt.generate_password_hash(datos['password']).decode('utf-8')
 
-                roles = db.session.query(Roles).filter(Roles.tipo == "CLIENT").first()
-                usuario = Usuarios(email = datos['email'], password = pw_hash, rolCod = roles.codRol)               
-                db.session.add(usuario)
-                db.session.commit()
-                print(usuario.password)
-                return usuario
-            except:
-                db.session.rollback()
+            roles = db.session.query(Roles).filter(Roles.tipo == "CLIENT").first()
+            usuario = Usuarios(email = datos['email'], password = pw_hash, rolCod = roles.codRol)               
+            db.session.add(usuario)
+            db.session.commit()
+            print(usuario.password)
+            return usuario
+            # try:
+            # except:
+            #     db.session.rollback()
 
 @ns.route('/admin')
 class UsuariosResource(Resource):

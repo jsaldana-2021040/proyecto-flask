@@ -6,7 +6,7 @@ from . import api
 usuarioModel = api.model('UsuarioModel', {
     'codUsuario' : fields.Integer,
     'email' : fields.String,
-    'password' : fields.String,
+    # 'password' : fields.String,
     'activo' : fields.Boolean,
     'rolCod' : fields.Integer
 })
