@@ -21,7 +21,7 @@ class PersonasResource(Resource):
 
         usuario = Usuarios.getUserByIdentity(get_jwt_identity())
         if usuario.rol.tipo != "ADMIN":
-            abort(403, 'El usuario no tiene permisos suficientes')
+            abort(401, 'El usuario no tiene permisos suficientes')
 
         args = self.parser.parse_args()
         query = db.session.query(Personas)
@@ -44,7 +44,7 @@ class PersonasResource(Resource):
         
         usuario = Usuarios.getUserByIdentity(get_jwt_identity())
         if usuario.rol.tipo != "ADMIN":
-            abort(403, 'El usuario no tiene permisos suficientes')
+            abort(401, 'El usuario no tiene permisos suficientes')
         
         try:
             datos = ns.payload
@@ -79,7 +79,7 @@ class PersonaResource(Resource):
         
         usuario = Usuarios.getUserByIdentity(get_jwt_identity())
         if usuario.rol.tipo != "ADMIN":
-            abort(403, 'El usuario no tiene permisos suficientes')
+            abort(401, 'El usuario no tiene permisos suficientes')
         
         datos = ns.payload
         persona = db.session.query(Personas).get(id)
@@ -95,7 +95,7 @@ class PersonaResource(Resource):
         
         usuario = Usuarios.getUserByIdentity(get_jwt_identity())
         if usuario.rol.tipo != "ADMIN":
-            abort(403, 'El usuario no tiene permisos suficientes')
+            abort(401, 'El usuario no tiene permisos suficientes')
         
         persona = db.session.query(Personas).get(id)
         persona.activo = False

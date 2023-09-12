@@ -20,7 +20,7 @@ class UsuariosResource(Resource):
 
         usuario = Usuarios.getUserByIdentity(get_jwt_identity())
         if usuario.rol.tipo != "ADMIN":
-            abort(403, 'El usuario no tiene permisos suficientes')
+            abort(401, 'El usuario no tiene permisos suficientes')
 
         args = self.parser.parse_args()
         query = db.session.query(Usuarios)
@@ -46,9 +46,6 @@ class UsuariosResource(Resource):
             db.session.commit()
             print(usuario.password)
             return usuario
-            # try:
-            # except:
-            #     db.session.rollback()
 
 @ns.route('/admin')
 class UsuariosResource(Resource):
@@ -61,7 +58,7 @@ class UsuariosResource(Resource):
             
             usuario = Usuarios.getUserByIdentity(get_jwt_identity())
             if usuario.rol.tipo != "ADMIN":
-                abort(403, 'El usuario no tiene permisos suficientes')
+                abort(401, 'El usuario no tiene permisos suficientes')
                 
             try:
                 datos = ns.payload
@@ -87,12 +84,16 @@ class UsuarioResource(Resource):
 
         usuario = Usuarios.getUserByIdentity(get_jwt_identity())
         if usuario.rol.tipo != "ADMIN":
-            abort(403, 'El usuario no tiene permisos suficientes')
+            abort(401, 'El usuario no tiene permisos suficientes')
        
         datos = ns.payload
         usuario =  db.session.query(Usuarios).get(id)
+
+        bcrypt = Bcrypt()
+        pw_hash = bcrypt.generate_password_hash(datos['password']).decode('utf-8')
+
         usuario.email = datos['email']
-        usuario.password = datos['password']
+        usuario.password = pw_hash
         db.session.commit()
         return usuario
 
@@ -102,7 +103,7 @@ class UsuarioResource(Resource):
         
         usuario = Usuarios.getUserByIdentity(get_jwt_identity())
         if usuario.rol.tipo != "ADMIN":
-            abort(403, 'El usuario no tiene permisos suficientes')
+            abort(401, 'El usuario no tiene permisos suficientes')
         
         usuario =  db.session.query(Usuarios).get(id)
         usuario.activo = False

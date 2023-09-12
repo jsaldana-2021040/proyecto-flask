@@ -30,12 +30,12 @@ class DireccionesResource(Resource):
 
     @ns.expect(direccionBodyRequestModel, validate=True)
     @ns.marshal_with(direccionModel)
-    # @jwt_required()
+    @jwt_required()
     def post(self):
             
-            # usuario = Usuarios.getUserByIdentity(get_jwt_identity())
-            # if usuario.rol.tipo != "ADMIN":
-            #     abort(403, 'El usuario no tiene permisos suficientes')
+            usuario = Usuarios.getUserByIdentity(get_jwt_identity())
+            if usuario.rol.tipo != "ADMIN":
+                abort(401, 'El usuario no tiene permisos suficientes')
 
             try:
                 datos = ns.payload
@@ -56,12 +56,12 @@ class DireccionResource(Resource):
 
     @ns.expect(direccionBodyRequestModel, validate=True)
     @ns.marshal_with(direccionModel)
-    # @jwt_required()
+    @jwt_required()
     def put(self, id):
 
-        # usuario = Usuarios.getUserByIdentity(get_jwt_identity())
-        # if usuario.rol.tipo != "ADMIN":
-        #         abort(403, 'El usuario no tiene permisos suficientes')
+        usuario = Usuarios.getUserByIdentity(get_jwt_identity())
+        if usuario.rol.tipo != "ADMIN":
+            abort(401, 'El usuario no tiene permisos suficientes')
 
         datos = ns.payload
         direccion =  db.session.query(Direcciones).get(id)
@@ -71,8 +71,13 @@ class DireccionResource(Resource):
         return direccion
 
     @ns.marshal_with(direccionModel)
-    # @jwt_required()
+    @jwt_required()
     def delete(self, id):
+
+        usuario = Usuarios.getUserByIdentity(get_jwt_identity())
+        if usuario.rol.tipo != "ADMIN":
+            abort(401, 'El usuario no tiene permisos suficientes')
+
         direccion =  db.session.query(Direcciones).get(id)
         direccion.activo = False
         db.session.commit()

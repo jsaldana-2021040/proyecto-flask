@@ -22,7 +22,7 @@ class EmpresasResource(Resource):
 
         usuario = Usuarios.getUserByIdentity(get_jwt_identity())
         if usuario.rol.tipo != "ADMIN":
-            abort(403, 'El usuario no tiene permisos suficientes')
+            abort(401, 'El usuario no tiene permisos suficientes')
 
         args = self.parser.parse_args()
         query = db.session.query(Empresas)
@@ -45,7 +45,7 @@ class EmpresasResource(Resource):
             
             usuario = Usuarios.getUserByIdentity(get_jwt_identity())
             if usuario.rol.tipo != "ADMIN":
-                abort(403, 'El usuario no tiene permisos suficientes')
+                abort(401, 'El usuario no tiene permisos suficientes')
                 
             try:
                 datos = ns.payload
@@ -71,7 +71,7 @@ class EmpresaResource(Resource):
 
         usuario = Usuarios.getUserByIdentity(get_jwt_identity())
         if usuario.rol.tipo != "ADMIN":
-            abort(403, 'El usuario no tiene permisos suficientes')
+            abort(401, 'El usuario no tiene permisos suficientes')
         
         datos = ns.payload
         empresa =  db.session.query(Empresas).get(id)
@@ -82,12 +82,12 @@ class EmpresaResource(Resource):
         return empresa
 
     @ns.marshal_with(empresaModel)
-    # @jwt_required()
+    @jwt_required()
     def delete(self, id):
 
-        # usuario = Usuarios.getUserByIdentity(get_jwt_identity())
-        # if usuario.rol.tipo != "ADMIN":
-        #     abort(403, 'El usuario no tiene permisos suficientes')
+        usuario = Usuarios.getUserByIdentity(get_jwt_identity())
+        if usuario.rol.tipo != "ADMIN":
+            abort(401, 'El usuario no tiene permisos suficientes')
 
         empresa =  db.session.query(Empresas).get(id)
         empresa.activo = False
