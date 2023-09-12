@@ -1,14 +1,19 @@
 from flask_restx import fields
 from . import api
 
+rolModel = api.model('RolModel',{
+    'codRol' : fields.Integer,
+    'tipo' : fields.String
+})
+
 # === modelos Direcciones ===
 
 usuarioModel = api.model('UsuarioModel', {
     'codUsuario' : fields.Integer,
     'email' : fields.String,
-    # 'password' : fields.String,
     'activo' : fields.Boolean,
-    'rolCod' : fields.Integer
+    'rolCod' : fields.Integer,
+    'rol' : fields.Nested(rolModel)
 })
 
 usuarioBodyRequestModel = api.model('UsuarioBodyRequestModel', {

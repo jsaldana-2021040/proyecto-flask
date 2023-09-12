@@ -30,7 +30,7 @@ class EmpresasResource(Resource):
         if args['nombre'] != None:
             query = query.filter(Empresas.nombre.ilike('%'+args['nombre']+'%'))
         if args['telefono'] != None:
-            query = query.filter(Empresas.telefono.ilike(args['telefono']))
+            query = query.filter(Empresas.telefono.ilike('%'+args['telefono']+'%'))
         if args['direccion'] != None:
             query = query.filter(Empresas.direccion.ilike('%'+args['direccion']+'%'))
         if args['activo'] != None:
@@ -115,7 +115,7 @@ class EmpresasPgResource(Resource):
         if args['nombre'] != None:
             query = query.filter(Empresas.nombre.ilike('%'+args['nombre']+'%'))
         if args['telefono'] != None:
-            query = query.filter(Empresas.telefono.ilike(args['telefono']))
+            query = query.filter(Empresas.telefono.ilike('%'+args['telefono']+'%'))
         if args['direccion'] != None:
             query = query.filter(Empresas.direccion.ilike('%'+args['direccion']+'%'))
         if args['activo'] != None:

@@ -126,7 +126,7 @@ class UsuariosPgResource(Resource):
         query = db.session.query(Usuarios)
 
         if args['email'] != None:
-            query = query.filter(Usuarios.telefono.ilike('%'+args['email'])+'%')
+            query = query.filter(Usuarios.email.ilike('%'+args['email']+'%'))
         if args['activo'] != None:
             query = query.filter(Usuarios.activo == args['activo'])
 
