@@ -55,6 +55,7 @@ class EmpresasResource(Resource):
                 return empresa
             except:
                 db.session.rollback()
+                abort(500, 'Error al guardar la empresa')
 
 
 @ns.route('/<int:id>')
