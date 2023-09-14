@@ -41,7 +41,12 @@ class UsuariosResource(Resource):
             pw_hash = bcrypt.generate_password_hash(datos['password']).decode('utf-8')
 
             roles = db.session.query(Roles).filter(Roles.tipo == "CLIENT").first()
-            usuario = Usuarios(email = datos['email'], password = pw_hash, rolCod = roles.codRol)               
+            usuario = Usuarios(email = datos['email'], password = pw_hash, rolCod = roles.codRol)
+
+            for user in db.session.query(Usuarios).all() : 
+                if datos['email'] == user.email : 
+                    abort(401, 'El email ya esta en uso')
+
             db.session.add(usuario)
             db.session.commit()
             print(usuario.password)
