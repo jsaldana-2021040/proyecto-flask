@@ -10,3 +10,4 @@ from .direcciones import *
 from .usuarios import *
 from .roles import *
 from .usuarios import *
+from .pokemons import *

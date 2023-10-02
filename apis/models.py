@@ -106,3 +106,18 @@ personasPgModel = api.model('PersonaPgModel', {
     'pages': fields.Integer,
     'items': fields.List(fields.Nested(personaModel))
 })
+
+# Pokemons
+
+pokemonModel = api.model('PokemonModel',{
+    'codPokemon' : fields.Integer,
+    'name' : fields.String,
+    'url' : fields.String
+})
+
+pokemonsPgModel = api.model('PokemonsPgModel',{
+    'total': fields.Integer,
+    'page': fields.Integer,
+    'pages': fields.Integer,
+    'items': fields.List(fields.Nested(pokemonModel))
+})
