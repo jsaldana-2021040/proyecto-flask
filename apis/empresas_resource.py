@@ -20,9 +20,9 @@ class EmpresasResource(Resource):
     @jwt_required()
     def get(self):
 
-        usuario = Usuarios.getUserByIdentity(get_jwt_identity())
-        if usuario.rol.tipo != "ADMIN":
-            abort(401, 'El usuario no tiene permisos suficientes')
+        # usuario = Usuarios.getUserByIdentity(get_jwt_identity())
+        # if usuario.rol.tipo != "ADMIN":
+        #     abort(401, 'El usuario no tiene permisos suficientes')
 
         args = self.parser.parse_args()
         query = db.session.query(Empresas)
@@ -43,9 +43,9 @@ class EmpresasResource(Resource):
     @jwt_required()
     def post(self):
             
-            usuario = Usuarios.getUserByIdentity(get_jwt_identity())
-            if usuario.rol.tipo != "ADMIN":
-                abort(401, 'El usuario no tiene permisos suficientes')
+            # usuario = Usuarios.getUserByIdentity(get_jwt_identity())
+            # if usuario.rol.tipo != "ADMIN":
+            #     abort(401, 'El usuario no tiene permisos suficientes')
                 
             try:
                 datos = ns.payload
@@ -70,9 +70,9 @@ class EmpresaResource(Resource):
     @jwt_required()
     def put(self, id):
 
-        usuario = Usuarios.getUserByIdentity(get_jwt_identity())
-        if usuario.rol.tipo != "ADMIN":
-            abort(401, 'El usuario no tiene permisos suficientes')
+        # usuario = Usuarios.getUserByIdentity(get_jwt_identity())
+        # if usuario.rol.tipo != "ADMIN":
+        #     abort(401, 'El usuario no tiene permisos suficientes')
         
         datos = ns.payload
         empresa =  db.session.query(Empresas).get(id)
@@ -86,9 +86,9 @@ class EmpresaResource(Resource):
     @jwt_required()
     def delete(self, id):
 
-        usuario = Usuarios.getUserByIdentity(get_jwt_identity())
-        if usuario.rol.tipo != "ADMIN":
-            abort(401, 'El usuario no tiene permisos suficientes')
+        # usuario = Usuarios.getUserByIdentity(get_jwt_identity())
+        # if usuario.rol.tipo != "ADMIN":
+        #     abort(401, 'El usuario no tiene permisos suficientes')
 
         empresa =  db.session.query(Empresas).get(id)
         empresa.activo = False

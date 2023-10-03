@@ -29,7 +29,7 @@ class LoginResource(Resource):
         if usuario == None or not bcrypt.check_password_hash(usuario.password, password):
             return abort(401, 'Credenciales incorrectas')
         
-        access_token = create_access_token(identity=email, additional_claims = {"rol": usuario.rol.tipo})
+        access_token = create_access_token(identity=email, additional_claims = {"rol": usuario.rol.nombre})
         
         return access_token
         

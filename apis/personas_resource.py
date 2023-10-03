@@ -20,7 +20,7 @@ class PersonasResource(Resource):
     def get(self):
 
         usuario = Usuarios.getUserByIdentity(get_jwt_identity())
-        if usuario.rol.tipo != "ADMIN":
+        if usuario.rol.nombre != "ADMIN":
             abort(401, 'El usuario no tiene permisos suficientes')
 
         args = self.parser.parse_args()
@@ -42,9 +42,6 @@ class PersonasResource(Resource):
     @jwt_required()
     def post(self):
         
-        usuario = Usuarios.getUserByIdentity(get_jwt_identity())
-        if usuario.rol.tipo != "ADMIN":
-            abort(401, 'El usuario no tiene permisos suficientes')
         
         try:
             datos = ns.payload
@@ -78,7 +75,7 @@ class PersonaResource(Resource):
     def put(self, id):
         
         usuario = Usuarios.getUserByIdentity(get_jwt_identity())
-        if usuario.rol.tipo != "ADMIN":
+        if usuario.rol.nombre != "ADMIN":
             abort(401, 'El usuario no tiene permisos suficientes')
         
         datos = ns.payload
@@ -94,7 +91,7 @@ class PersonaResource(Resource):
     def delete(self, id):
         
         usuario = Usuarios.getUserByIdentity(get_jwt_identity())
-        if usuario.rol.tipo != "ADMIN":
+        if usuario.rol.nombre != "ADMIN":
             abort(401, 'El usuario no tiene permisos suficientes')
         
         persona = db.session.query(Personas).get(id)

@@ -1,9 +1,20 @@
 from flask_restx import fields
 from . import api
 
+# === modelos Roles ===
+
 rolModel = api.model('RolModel',{
     'codRol' : fields.Integer,
-    'tipo' : fields.String
+    'nombre' : fields.String,
+    'descripcion' : fields.String,
+    'activo' : fields.Boolean,
+    'usuarioCreador' : fields.String,
+    'usuarioEditor' : fields.String
+})
+
+rolBodyRequestModel = api.model('RolBodyRequestModel',{
+    'nombre' : fields.String,
+    'descripcion' : fields.String
 })
 
 # === modelos Direcciones ===
@@ -120,4 +131,75 @@ pokemonsPgModel = api.model('PokemonsPgModel',{
     'page': fields.Integer,
     'pages': fields.Integer,
     'items': fields.List(fields.Nested(pokemonModel))
+})
+
+# === modelos Roles ===
+
+modulosModel = api.model('modulosModel',{
+    'codModulo' : fields.Integer,
+    'modulo' : fields.String,
+    'descripcion' : fields.String,
+    'activo' : fields.Boolean,
+    'usuarioCreador' : fields.String,
+    'usuarioEditor' : fields.String
+})
+
+modulosBodyRequestModel = api.model('modulosBodyRequestModel',{
+    'modulo' : fields.String,
+    'descripcion' : fields.String
+})
+
+ModulosPgModel = api.model('ModulosPgModel',{
+    'total': fields.Integer,
+    'page': fields.Integer,
+    'pages': fields.Integer,
+    'items': fields.List(fields.Nested(modulosModel))
+})
+
+# === modelos Permisos ===
+
+permisosModel = api.model('PermisosModel',{
+    'codPermiso' : fields.Integer,
+    'permiso' : fields.String,
+    'descripcion' : fields.String,
+    'activo' : fields.Boolean,
+    'usuarioCreador' : fields.String,
+    'usuarioEditor' : fields.String,
+    'moduloCod': fields.Integer
+})
+
+permisosBodyRequestModel = api.model('PermisosBodyRequestModel',{
+    'permiso' : fields.String,
+    'descripcion' : fields.String,
+    'moduloCod': fields.Integer
+})
+
+permisosPgModel = api.model('PermisosPgModel',{
+    'total': fields.Integer,
+    'page': fields.Integer,
+    'pages': fields.Integer,
+    'items': fields.List(fields.Nested(permisosModel))
+})
+
+# === modelos Roles Permisos ===
+
+rolesPermisosModel = api.model('rolesPermisosModel',{
+    'codRolPermiso' : fields.Integer,
+    'rolCod' : fields.Integer,
+    'permisosCod' : fields.Integer,
+    'activo' : fields.Boolean,
+    'usuarioCreador' : fields.String,
+    'usuarioEditor' : fields.String
+})
+
+rolesPermisosBodyRequestModel = api.model('rolesPermisosBodyRequestModel',{
+    'rolCod' : fields.Integer,
+    'permisosCod' : fields.Integer,
+})
+
+rolesPermisosPgModel = api.model('rolesPermisosPgModel',{
+    'total': fields.Integer,
+    'page': fields.Integer,
+    'pages': fields.Integer,
+    'items': fields.List(fields.Nested(rolesPermisosModel))
 })
