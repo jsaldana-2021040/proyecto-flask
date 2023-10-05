@@ -9,5 +9,3 @@ class RolesPermisos(db.Model):
     activo: bool = db.Column('activo', db.Boolean, nullable=True, default=True)
     usuarioCreador: str = db.Column('usuario_creador',  db.String(50), nullable=False)
     usuarioEditor: str = db.Column('usuario_editor',  db.String(50), nullable=True)
-
-    roles = db.relationship('Roles', backref='roles', lazy=True)

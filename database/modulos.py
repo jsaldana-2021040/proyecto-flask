@@ -10,6 +10,6 @@ class Modulos(db.Model):
     usuarioCreador: str = db.Column('usuario_creador',  db.String(50), nullable=False)
     usuarioEditor: str = db.Column('usuario_editor',  db.String(50), nullable=True)
 
-    permisos = db.relationship('Permisos', backref='tipoPermiso', lazy=True)
+    permisos = db.relationship('Permisos', backref='modulo', lazy=True)
 
     

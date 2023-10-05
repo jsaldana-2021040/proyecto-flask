@@ -61,7 +61,6 @@ class PermisosPgResource(Resource):
     parser.add_argument('pagina', default=1, type=int)
     parser.add_argument('porPagina', default=10, type=int)
     parser.add_argument('permiso', type=str, location='args')
-    parser.add_argument('descripcion', type=str, location='args')
     parser.add_argument('activo', type=inputs.boolean, location='args')
 
     @ns.expect(parser)
@@ -72,9 +71,7 @@ class PermisosPgResource(Resource):
 
         if args['permiso'] != None:
             query = query.filter(Permisos.permiso.ilike('%'+args['permiso']+'%'))
-        if args['descripcion'] != None:
-            query = query.filter(Permisos.descripcion.ilike('%'+args['descripcion']+'%'))
         if args['activo'] != None:
             query = query.filter(Permisos.activo == args['activo'])
 
-        return query.order_by(Permisos.codModulo).paginate(page=args['pagina'], per_page=args['porPagina'])
+        return query.order_by(Permisos.codPermiso).paginate(page=args['pagina'], per_page=args['porPagina'])

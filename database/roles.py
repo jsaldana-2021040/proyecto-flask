@@ -11,3 +11,5 @@ class Roles(db.Model):
     usuarioEditor: str = db.Column('usuario_editor',  db.String(50), nullable=True)
 
     usuarios = db.relationship('Usuarios', backref='rol', lazy=True)
+
+    rolesPermisos = db.relationship('RolesPermisos', backref='rol', lazy=True)

@@ -11,4 +11,4 @@ class Permisos(db.Model):
     usuarioEditor: str = db.Column('usuario_editor',  db.String(50), nullable=True)
     moduloCod: int = db.Column('modulo_cod', db.SmallInteger, db.ForeignKey('modulos.cod_modulo'), nullable=False)
 
-    rolesPermisos = db.relationship('RolesPermisos', backref='rolPermisos', lazy=True)
+    rolesPermisos = db.relationship('RolesPermisos', backref='permisos', lazy=True)

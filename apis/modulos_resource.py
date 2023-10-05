@@ -61,7 +61,6 @@ class ModulosPgResource(Resource):
     parser.add_argument('pagina', default=1, type=int)
     parser.add_argument('porPagina', default=10, type=int)
     parser.add_argument('modulo', type=str, location='args')
-    parser.add_argument('descripcion', type=str, location='args')
     parser.add_argument('activo', type=inputs.boolean, location='args')
 
     @ns.expect(parser)
@@ -72,8 +71,6 @@ class ModulosPgResource(Resource):
 
         if args['modulo'] != None:
             query = query.filter(Modulos.modulo.ilike('%'+args['modulo']+'%'))
-        if args['descripcion'] != None:
-            query = query.filter(Modulos.descripcion.ilike('%'+args['descripcion']+'%'))
         if args['activo'] != None:
             query = query.filter(Modulos.activo == args['activo'])
 
