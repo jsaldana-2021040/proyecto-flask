@@ -19,7 +19,7 @@ class UsuariosResource(Resource):
     def get(self):
 
         usuario = Usuarios.getUserByIdentity(get_jwt_identity())
-        if usuario.rol.tipo != "ADMIN":
+        if usuario.rol.nombre != "ADMIN":
             abort(401, 'El usuario no tiene permisos suficientes')
 
         args = self.parser.parse_args()
@@ -40,7 +40,7 @@ class UsuariosResource(Resource):
             bcrypt = Bcrypt()
             pw_hash = bcrypt.generate_password_hash(datos['password']).decode('utf-8')
 
-            roles = db.session.query(Roles).filter(Roles.tipo == "CLIENT").first()
+            roles = db.session.query(Roles).filter(Roles.nombre == "CLIENT").first()
             usuario = Usuarios(email = datos['email'], password = pw_hash, rolCod = roles.codRol)
 
             for user in db.session.query(Usuarios).all() : 
@@ -62,7 +62,7 @@ class UsuariosResource(Resource):
     def post(self):
             
             usuario = Usuarios.getUserByIdentity(get_jwt_identity())
-            if usuario.rol.tipo != "ADMIN":
+            if usuario.rol.nombre != "ADMIN":
                 abort(401, 'El usuario no tiene permisos suficientes')
                 
             try:
@@ -88,7 +88,7 @@ class UsuarioResource(Resource):
     def put(self, id):
 
         usuario = Usuarios.getUserByIdentity(get_jwt_identity())
-        if usuario.rol.tipo != "ADMIN":
+        if usuario.rol.nombre != "ADMIN":
             abort(401, 'El usuario no tiene permisos suficientes')
        
         datos = ns.payload
@@ -107,7 +107,7 @@ class UsuarioResource(Resource):
     def delete(self, id):
         
         usuario = Usuarios.getUserByIdentity(get_jwt_identity())
-        if usuario.rol.tipo != "ADMIN":
+        if usuario.rol.nombre != "ADMIN":
             abort(401, 'El usuario no tiene permisos suficientes')
         
         usuario =  db.session.query(Usuarios).get(id)
