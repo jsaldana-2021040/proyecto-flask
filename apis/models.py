@@ -82,7 +82,7 @@ rolModel = api.model('RolModel',{
     'activo' : fields.Boolean,
     'usuarioCreador' : fields.String,
     'usuarioEditor' : fields.String,
-    'rolesPermisos': fields.List(fields.Nested(rolesPermisosModel))
+    'rolesPermisos': fields.List(fields.Nested(rolesPermisosModel)),
 })
 
 rolBodyRequestModel = api.model('RolBodyRequestModel',{

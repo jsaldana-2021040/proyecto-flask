@@ -41,12 +41,37 @@ class RolesResource(Resource):
     @ns.marshal_with(rolModel)
     @jwt_required()
     def put(self, id):
+
+        query = db.session.query(RolesPermisos)
+
+        existentes = query.order_by(RolesPermisos.codRolPermiso).filter(RolesPermisos.rolCod == id).all()
         
         datos = ns.payload
         roles =  db.session.query(Roles).get(id)
         roles.nombre = datos['nombre']
         roles.descripcion = datos['descripcion']
         roles.usuarioEditor = Usuarios.getUserByIdentity(get_jwt_identity()).email
+
+        if 'permisos' in datos:
+                
+                for permisoBody in datos['permisos']:
+                    existeEnBd = False
+
+                    for existente in existentes:
+                        if permisoBody == existente.permisosCod:
+                            existeEnBd = True
+                            
+                    if not existeEnBd:
+                        nuevoRolesPermisos = RolesPermisos(permisosCod = permisoBody, usuarioEditor = Usuarios.getUserByIdentity(get_jwt_identity()).email)
+                        roles.rolesPermisos.append(nuevoRolesPermisos)
+
+                for permiso in existentes :
+                    if permiso.permisosCod not in datos['permisos']:
+                        permiso.activo = False
+                    else:
+                        if permiso.permisosCod in datos['permisos']:
+                            if permiso.activo == False:
+                                permiso.activo = True
 
         db.session.commit()
         return roles
