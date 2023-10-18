@@ -39,7 +39,7 @@ while not salir:
     
     index = 1
     for num in range(len(numeros) - 1):
-        for index in range(len(numeros)):
+        for i in range(len(numeros)):
 
             intercambio: bool = False
             if opcion == 1:
@@ -48,9 +48,15 @@ while not salir:
                 intercambio = numeros[index] > numeros[index-1]
                 
             if intercambio:
+                
                 value = numeros[index]
                 numeros.pop(index)
-                numeros.insert(0, value)
+
+                posicion = 1
+                while posicion < len(numeros):
+                    numeros.insert(0, value)
+                    posicion+= 1
+                    
             
                 if verPasos == 1:
                     contador+=1
