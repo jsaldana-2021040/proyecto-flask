@@ -36,25 +36,27 @@ while not salir:
     opcion = int(solicitarDatos('| de que manera quiere ordenarlos:\n| 1.asc\n| 2.desc\n|>> '))
 
     verPasos = int(solicitarDatos('| Desae ver los pasos?: \n| 1.Si \n| 2.No\n|\n|>> '))
-
-    # ordenamiento
+    
+    index = 1
     for num in range(len(numeros) - 1):
-        for index in range(len(numeros) - (num + 1)):
+        for index in range(len(numeros)):
 
             intercambio: bool = False
             if opcion == 1:
-                intercambio = numeros[index] > numeros[index + 1]
+                intercambio = numeros[index] < numeros[index-1]
             elif opcion == 2:
-                intercambio = numeros[index] < numeros[index + 1]
+                intercambio = numeros[index] > numeros[index-1]
                 
             if intercambio:
-                numActual = numeros[index + 1]
-                numeros[index + 1] = numeros[index]
-                numeros[index] = numActual
-
-            if verPasos == 1:
-                contador+=1
-                print('paso', contador,':', numeros)
+                value = numeros[index]
+                numeros.pop(index)
+                numeros.insert(0, value)
+            
+                if verPasos == 1:
+                    contador+=1
+                    print('paso', contador,':', numeros)
+            
+            index+=1
 
     impresionLinea('| RESULTADO: ' + str(numeros))
 
