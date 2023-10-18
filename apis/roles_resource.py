@@ -41,6 +41,7 @@ class RolesResource(Resource):
     @ns.marshal_with(rolModel)
     @jwt_required()
     def put(self, id):
+        usr: Usuarios = Usuarios.getUserByIdentity(get_jwt_identity())
 
         query = db.session.query(RolesPermisos)
 
@@ -50,7 +51,7 @@ class RolesResource(Resource):
         roles =  db.session.query(Roles).get(id)
         roles.nombre = datos['nombre']
         roles.descripcion = datos['descripcion']
-        roles.usuarioEditor = Usuarios.getUserByIdentity(get_jwt_identity()).email
+        roles.usuarioEditor = usr.email
 
         if 'permisos' in datos:
                 
@@ -62,7 +63,7 @@ class RolesResource(Resource):
                             existeEnBd = True
                             
                     if not existeEnBd:
-                        nuevoRolesPermisos = RolesPermisos(permisosCod = permisoBody, usuarioEditor = Usuarios.getUserByIdentity(get_jwt_identity()).email)
+                        nuevoRolesPermisos = RolesPermisos(permisosCod = permisoBody, usuarioCreador = usr.email)
                         roles.rolesPermisos.append(nuevoRolesPermisos)
 
                 for permiso in existentes :
