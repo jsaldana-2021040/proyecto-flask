@@ -51,4 +51,5 @@ while not salir:
 
     impresionLinea('| RESULTADO: ' + str(numeros))
 
-    salir = bool(solicitarDatos('| Desea realizar un nuevo ordenamiento (0=Si, 1=Salir):\n|>> '))
+    opSalir = int(solicitarDatos('| Desea realizar un nuevo ordenamiento (1=Si, 2=No, Salir):\n|>> '))
+    salir = True if opSalir == 2 else False
