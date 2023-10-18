@@ -2,9 +2,11 @@ numeros = [5,4,3,2,1]
 
 contador = 0
 
-for num in range(len(numeros) - 1):
+largoArray = len(numeros)
 
-    for index in range(len(numeros) - (num + 1)):
+for num in range(largoArray - 1):
+
+    for index in range(largoArray - (num + 1)):
 
         if numeros[index] > numeros[index + 1]:
             
@@ -17,15 +19,15 @@ for num in range(len(numeros) - 1):
         contador+=1
         print('paso', contador,':', numeros)
 
-    for index in range(len(numeros) - (num + 1)):
+    for index in range(largoArray - (num + 1)):
         
-        if numeros[len(numeros)-(index+1)] < numeros[len(numeros)-(index+2)]:
+        if numeros[largoArray-(index+1)] < numeros[largoArray-(index+2)]:
             
-            numActual = numeros[len(numeros)-(index+1)]
+            numActual = numeros[largoArray-(index+1)]
 
-            numeros[len(numeros)-(index+1)] = numeros[len(numeros)-(index+2)]
+            numeros[largoArray-(index+1)] = numeros[largoArray-(index+2)]
 
-            numeros[len(numeros)-(index+2)] = numActual
+            numeros[largoArray-(index+2)] = numActual
 
             contador+=1
             print('paso al revez', contador,':', numeros)
