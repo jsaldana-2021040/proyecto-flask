@@ -1,5 +1,4 @@
 import random
-import time
 
 strLinea: str = '--------------------------------------------------------'
 contador = 0
@@ -18,13 +17,11 @@ def impresionLinea(txt: str):
 
 salir: bool = False
 while not salir:
-    tipo = int(solicitarDatos('| que tipo de lista va a ordenar: \n| 1.Propia \n| 2.Autogenerada\n| 3.leer de lista ya generada:\n|\n|>> '))
+
+    tipo = int(solicitarDatos('| que tipo de lista va a ordenar: \n| 1.Autogenerada \n| 2.leer de lista ya generada:\n|\n|>> '))
     numeros = []
         
     if tipo == 1: # Lista propia
-        entrada = solicitarDatos('| ingrese los numeros separados por comas:\n|>> ')
-        numeros = entrada.split(',')
-    elif tipo == 2: # Lista autogenerada
         cantidad = int(solicitarDatos('| Cuantos elementos quiere en el arreglo:\n|>> '))
         f = open("list_numbers.txt", "w")
 
@@ -38,42 +35,51 @@ while not salir:
 
         f = open("list_numbers.txt", "r")
         numeros = f.read().split(" ")
-
-    elif tipo == 3:
+    elif tipo == 2:
         f = open("list_numbers.txt", "r")
-        numeros = f.read().split(" ")
-    else:
-        print('seleccione una opcion valida')
-        exit()
+        numeros = f.read().split(" ")  
 
     opcion = int(solicitarDatos('| de que manera quiere ordenarlos:\n| 1.asc\n| 2.desc\n|>> '))
 
     verPasos = int(solicitarDatos('| Desae ver los pasos?: \n| 1.Si \n| 2.No\n|\n|>> '))
 
-    # ordenamiento
-    tiempo = time.time()
-    for num in range(len(numeros) - 1):
-        for index in range(len(numeros) - (num + 1)):
+    casilleros = [[],[],[],[],[]]
+    limite1: int = 0
+    limite2: int = 9
+    
+    numCasillero: int = 0
+    for index in range(len(numeros)):
+        for num in numeros:
+            if (int(num) >= limite1  and int(num) <= limite2):
+                casilleros[numCasillero].append(num)
+                
+        numCasillero+=1
+        limite1+=10
+        limite2+=10
 
+    if verPasos == 1:
+        print(numeros)
+        print('Paso bucket', ':', casilleros)
+    
+    for data in casilleros:
+        for index in range(len(data) - 1):
             intercambio: bool = False
             if opcion == 1:
-                intercambio = numeros[index] > numeros[index + 1]
+                intercambio = data[index] > data[index + 1]
             elif opcion == 2:
-                intercambio = numeros[index] < numeros[index + 1]
+                intercambio = data[index] < data[index + 1]
                 
             if intercambio:
-                numActual = numeros[index + 1]
-                numeros[index + 1] = numeros[index]
-                numeros[index] = numActual
+                numActual = data[index + 1]
+                data[index + 1] = data[index]
+                data[index] = numActual
 
             if verPasos == 1:
                 contador+=1
-                print('paso', contador,':', numeros)
+                print('paso', contador,':', casilleros)
 
-    tiempoFinal = time.time()
-
-    impresionLinea('| RESULTADO: ' + str(numeros))
-    impresionLinea('| Tiempo total: ' + str(tiempoFinal - tiempo))
+    casilleros = casilleros[0] + casilleros[1] + casilleros[2] + casilleros[3] + casilleros[4]
+    impresionLinea('| RESULTADO: ' + str(casilleros))
 
     opSalir = int(solicitarDatos('| Desea realizar un nuevo ordenamiento (1=Si, 2=No, Salir):\n|>> '))
     salir = True if opSalir == 2 else False
