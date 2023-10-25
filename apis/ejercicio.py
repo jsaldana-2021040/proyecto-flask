@@ -1,14 +1,19 @@
 Lista = [4, 6, 1, 8, 2, 1, 5, 9, 8, 3, 2, 6, 6, 2]
 
-def buscarPareja(data = 1):
-    for num in Lista:
-        for index in range(1, len(Lista)):
-            if (num + Lista[data]) != 6:
-                data+=1
-                buscarPareja(data)
+resultados = []
 
-            elif (num + Lista[index]) == 6 and num != Lista[index] :
-                respuesta = [num, Lista[index]]
-                print(respuesta)
+def buscarPareja(list, target, current=[], index=0):
+    if target == 0:
+        for i in range(0 ,len(current)):
+            if current[i] < current[i + 1]:
+                numActual = current[i + 1]
+                current[i + 1] = current[i]
+                current[i] = numActual
+        if current not in resultados:
+            resultados.append(current)
+    for i in range(index, len(list)):
+        buscarPareja(list, target - list[i], current + [list[i]], i + 1)
 
-buscarPareja()
+target = 10
+buscarPareja(Lista, target)
+print(resultados)

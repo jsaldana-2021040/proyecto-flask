@@ -1,4 +1,5 @@
 import random
+import time
 
 strLinea: str = '--------------------------------------------------------'
 
@@ -22,7 +23,7 @@ def impresionLinea(txt: str):
 
 salir: bool = False
 while not salir:
-    tipo = int(solicitarDatos('| que tipo de lista va a ordenar: \n| 1.Propia \n| 2.Autogenerada\n|\n|>> '))
+    tipo = int(solicitarDatos('| que tipo de lista va a ordenar: \n| 1.Propia \n| 2.Autogenerada\n| 3.leer de lista ya generada:\n|\n|>> '))
         
     if tipo == 1: # Lista propia
         entrada = solicitarDatos('| ingrese los numeros separados por comas:\n|>> ')
@@ -30,10 +31,22 @@ while not salir:
         largoArray = len(numeros)
     elif tipo == 2: # Lista autogenerada
         cantidad = int(solicitarDatos('| Cuantos elementos quiere en el arreglo:\n|>> '))
+        f = open("list_numbers.txt", "w")
+
         i=0
         while i < cantidad:
-            numeros.append(random.randint(1,99))
+            if i == cantidad - 1:
+                f.write(str(random.randint(1,99)))
+            else:
+                f.write(str(random.randint(1,99)) + ' ')
             i+=1
+
+        f = open("list_numbers.txt", "r")
+        numeros = f.read().split(" ")
+
+    elif tipo == 3:
+        f = open("list_numbers.txt", "r")
+        numeros = f.read().split(" ")
         largoArray = len(numeros)
     else:
         print('seleccione una opcion valida')
@@ -43,6 +56,7 @@ while not salir:
 
     verPasos = int(solicitarDatos('| Desae ver los pasos?: \n| 1.Si \n| 2.No\n|\n|>> '))
 
+    tiempo = time.time()
     for num in range(largoArray - 1):
 
         intercambio: bool = False
@@ -86,8 +100,10 @@ while not salir:
                 contador+=1
                 print('paso inverso', contador,':', numeros)
 
+    tiempoFinal = time.time()
 
     impresionLinea('| RESULTADO: ' + str(numeros))
+    impresionLinea('| Tiempo total: ' + str(tiempoFinal - tiempo))
 
     opSalir = int(solicitarDatos('| Desea realizar un nuevo ordenamiento (1=Si, 2=No, Salir):\n|>> '))
     salir = True if opSalir == 2 else False

@@ -1,4 +1,5 @@
 import random
+import time
 
 strLinea: str = '--------------------------------------------------------'
 contador = 0
@@ -28,9 +29,9 @@ while not salir:
         i=0
         while i < cantidad:
             if i == cantidad - 1:
-                f.write(str(random.randint(1,99)))
+                f.write(str(random.randint(1,49)))
             else:
-                f.write(str(random.randint(1,99)) + ' ')
+                f.write(str(random.randint(1,49)) + ' ')
             i+=1
 
         f = open("list_numbers.txt", "r")
@@ -48,6 +49,8 @@ while not salir:
     limite2: int = 9
     
     numCasillero: int = 0
+    
+    tiempo = time.time()
     for index in range(len(numeros)):
         for num in numeros:
             if (int(num) >= limite1  and int(num) <= limite2):
@@ -78,8 +81,11 @@ while not salir:
                 contador+=1
                 print('paso', contador,':', casilleros)
 
+    tiempoFinal = time.time()
+
     casilleros = casilleros[0] + casilleros[1] + casilleros[2] + casilleros[3] + casilleros[4]
     impresionLinea('| RESULTADO: ' + str(casilleros))
+    impresionLinea('| Tiempo total: ' + str(tiempoFinal - tiempo))
 
     opSalir = int(solicitarDatos('| Desea realizar un nuevo ordenamiento (1=Si, 2=No, Salir):\n|>> '))
     salir = True if opSalir == 2 else False
