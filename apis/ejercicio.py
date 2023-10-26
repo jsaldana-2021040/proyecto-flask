@@ -4,11 +4,7 @@ resultados = []
 
 def buscarPareja(list, target, current=[], index=0):
     if target == 0:
-        for i in range(0 ,len(current)):
-            if current[i] < current[i + 1]:
-                numActual = current[i + 1]
-                current[i + 1] = current[i]
-                current[i] = numActual
+        current.sort()
         if current not in resultados:
             resultados.append(current)
     for i in range(index, len(list)):
@@ -17,3 +13,4 @@ def buscarPareja(list, target, current=[], index=0):
 target = 10
 buscarPareja(Lista, target)
 print(resultados)
+print(len(resultados))
