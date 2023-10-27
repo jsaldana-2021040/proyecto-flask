@@ -15,7 +15,6 @@ def impresionLinea(txt: str):
     print(txt)
     print(strLinea)
 
-
 salir: bool = False
 while not salir:
 
@@ -26,7 +25,7 @@ while not salir:
         cantidad = int(solicitarDatos('| Cuantos elementos quiere en el arreglo:\n|>> '))
         f = open("list_numbers.txt", "w")
 
-        i=0
+        i = 0
         while i < cantidad:
             if i == cantidad - 1:
                 f.write(str(random.randint(1,49)))
